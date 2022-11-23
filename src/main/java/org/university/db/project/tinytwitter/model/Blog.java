@@ -1,4 +1,4 @@
-package Model;
+package org.university.db.project.tinytwitter.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,6 @@ public class Blog {
   @Column(nullable = false, name = "author")
   private int author;
 
-
   public Blog(int id, String title, int author){
     this.id = id;
     this.title =title;
@@ -36,7 +35,6 @@ public class Blog {
   public void setTitle(String title) {
     this.title = title;
   }
-
 
   public String getTitle() {
     return this.title;

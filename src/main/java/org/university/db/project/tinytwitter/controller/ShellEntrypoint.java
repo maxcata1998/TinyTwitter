@@ -1,6 +1,8 @@
 package org.university.db.project.tinytwitter.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
@@ -32,6 +34,8 @@ public class ShellEntrypoint extends AbstractMenuController {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.scan("org.university.db.project.tinytwitter");
+//        context.
+        context.refresh();
 
         ShellEntrypoint entrypoint = context.getBean(ShellEntrypoint.class);
 
@@ -44,6 +48,7 @@ public class ShellEntrypoint extends AbstractMenuController {
         while (result != ControllerResult.EXIT) {
             result = entrypoint.run(twitterContext);
             if (result == ControllerResult.LOGOUT) {
+                System.out.println("Logging out");
                 twitterContext.setUser(null);
             }
         }

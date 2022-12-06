@@ -30,8 +30,8 @@ public class ShellLoginController extends AbstractMenuController implements IMen
 
     @Override
     protected void registerMenu() {
-        register("Blogs", blogController);
-        register("Collections", collectionController);
+        register("Blogs", c -> ControllerResult.RETURN);//blogController);
+        register("Collections", c -> ControllerResult.RETURN);//collectionController);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ShellLoginController extends AbstractMenuController implements IMen
             return ControllerResult.RETURN;
         } else {
             context.setUser(user);
-            return ControllerResult.RETURN;
         }
+        return ControllerResult.NORMAL;
     }
 }

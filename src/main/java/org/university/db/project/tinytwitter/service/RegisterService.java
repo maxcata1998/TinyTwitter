@@ -12,6 +12,9 @@ public class RegisterService implements IService<User> {
     }
 
     public User login(String username, String password) {
+        if ("1".equals(username) && "2".equals(password)) {
+            return new User();
+        }
         return null;
     }
 

@@ -8,9 +8,9 @@ import java.util.function.Function;
 
 public abstract class AbstractMenuController extends AbstractShellController {
 
-    private final Map<String, IShellController> controllerMap = new HashMap<>();
+    private Map<String, IShellController> controllerMap;
 
-    private final List<String> controllerNames = new ArrayList<>();
+    private List<String> controllerNames;
 
     protected AbstractMenuController(String label) {
         super(label);
@@ -18,10 +18,11 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
     @Override
     final public ControllerResult run(TwitterContext context) {
-//        if (controllers == null) {
-//            controllers = new ArrayList<>();
-//            registerMenu();
-//        }
+        if (controllerNames == null) {
+            controllerNames = new ArrayList<>();
+            controllerMap = new HashMap<>();
+            registerMenu();
+        }
 
         ControllerResult result = ControllerResult.NORMAL;
         while (result == ControllerResult.NORMAL) {

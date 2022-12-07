@@ -1,3 +1,4 @@
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
 -- MySQL dump 10.13  Distrib 8.0.29, for Linux (x86_64)
 --
 -- Host: localhost    Database: tiny_twitter
@@ -38,8 +39,9 @@ CREATE TABLE `blog` (
   `content` text NOT NULL,
   `author` int DEFAULT NULL,
   PRIMARY KEY (`blog_id`),
+  UNIQUE KEY `blog_title_uindex` (`title`),
   KEY `blog_user_user_id_fk` (`author`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,6 +50,7 @@ CREATE TABLE `blog` (
 
 LOCK TABLES `blog` WRITE;
 /*!40000 ALTER TABLE `blog` DISABLE KEYS */;
+INSERT INTO `blog` VALUES (1,'title2',NULL,'2022-12-07','content1',NULL);
 /*!40000 ALTER TABLE `blog` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +192,7 @@ CREATE TABLE `user` (
   `email` varchar(45) NOT NULL,
   `password` varchar(20) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +201,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'a','a',''),(2,'a','a','');
+INSERT INTO `user` VALUES (5,'yan','yan','yan');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -211,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-07 19:55:53
+-- Dump completed on 2022-12-07 23:02:51

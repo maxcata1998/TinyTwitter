@@ -7,19 +7,19 @@ import org.university.db.project.tinytwitter.controller.base.AbstractMenuControl
 import org.university.db.project.tinytwitter.controller.ControllerResult;
 import org.university.db.project.tinytwitter.controller.base.IMenuController;
 import org.university.db.project.tinytwitter.entity.User;
-import org.university.db.project.tinytwitter.service.RegisterService;
+import org.university.db.project.tinytwitter.service.UserService;
 import org.university.db.project.tinytwitter.service.TwitterContext;
 
 @Controller
-public class ShellRegisterController extends AbstractMenuController implements IMenuController {
+public class ShellUserController extends AbstractMenuController implements IMenuController {
 
     @Autowired
-    private RegisterService registerService;
+    private UserService userService;
 
     @Autowired
     private ShellPortalController portalController;
 
-    protected ShellRegisterController() {
+    protected ShellUserController() {
         super("Register");
     }
 
@@ -35,21 +35,29 @@ public class ShellRegisterController extends AbstractMenuController implements I
         System.out.print("Password: ");
         String password = context.getIn().next();
 
-        User user = registerService.login(username, password);
+        User user = userService.login(username, password);
         if (user == null) {
             System.out.println("Invalid Username or Password");
             return ControllerResult.RETURN;
         } else {
             context.setUser(user);
         }
-        return portalController.run(context);
+        ControllerResult result = portalController.run(context);
+        if (result == ControllerResult.RETURN) {
+            return ControllerResult.NORMAL;
+        }
+        if (result == ControllerResult.LOGOUT) {
+            context.setUser(null);
+            return ControllerResult.NORMAL;
+        }
+        return result;
     }
 
     private ControllerResult register(TwitterContext context) {
         User user = new User();
         System.out.print("Username: ");
         String username = context.getIn().next();
-        if (registerService.exist(username)) {
+        if (userService.exist(username)) {
             System.out.println("Username \"" + username + "\" already exist");
             return ControllerResult.NORMAL;
         }
@@ -61,7 +69,7 @@ public class ShellRegisterController extends AbstractMenuController implements I
         System.out.print("Email   : ");
         user.setEmail(context.getIn().next());
 
-        registerService.add(user);
+        userService.add(user);
         context.setUser(user);
         return ControllerResult.RETURN;
     }

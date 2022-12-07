@@ -1,10 +1,9 @@
 package org.university.db.project.tinytwitter.controller;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.university.db.project.tinytwitter.TinyTwitterApplication;
-import org.university.db.project.tinytwitter.controller.login.ShellRegisterController;
+import org.university.db.project.tinytwitter.controller.login.ShellUserController;
 import org.university.db.project.tinytwitter.service.TwitterContext;
 
 import java.util.Scanner;
@@ -24,7 +23,7 @@ public class ShellEntrypoint {
         SpringApplication application = new SpringApplication(TinyTwitterApplication.class);
 //        application.
 
-        ShellRegisterController registerController = context.getBean(ShellRegisterController.class);
+        ShellUserController registerController = context.getBean(ShellUserController.class);
 
         System.out.println("Welcome to Tiny Twitter");
 

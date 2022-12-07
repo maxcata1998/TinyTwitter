@@ -74,11 +74,16 @@ public abstract class AbstractMenuController extends AbstractShellController {
         System.out.println((controllerNames.size() + 2) + ". Return");
         System.out.println((controllerNames.size() + 3) + ". Exit");
         System.out.print("Selection: ");
-        int selection = context.getIn().nextInt();
-        while (selection < 1 || controllerNames.size() + 3 < selection) {
-            System.out.print("Invalid option, select again: ");
-            selection = context.getIn().nextInt();
+        int selection;
+        while (true) {
+            try {
+                selection = context.getIn().nextInt();
+                if ( 1 <= selection && selection <= controllerNames.size() + 3) {
+                    return selection;
+                }
+            } catch (InputMismatchException e) {
+                System.out.print("Invalid option, select again: ");
+            }
         }
-        return selection;
     }
 }

@@ -64,4 +64,8 @@
     select blog_id, title, create_date, update_date, author, content
     from blog
   </select>
+  <select id="find"  resultMap="BaseResultMap" parameterType="java.lang.String">
+    select blog_id, title, create_date, update_date, author, content
+    from blog where title like "%#{title}%"
+  </select>
 </mapper>

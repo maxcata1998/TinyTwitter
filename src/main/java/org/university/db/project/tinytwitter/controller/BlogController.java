@@ -48,22 +48,23 @@ public class BlogController extends AbstractMenuController {
         blog.setAuthor(context.getUser().getUserId());
         blog.setCreateDate(new Date());
         blog.setUpdateDate(blog.getCreateDate());
+        blog.setAuthor(context.getUser().getUserId());
         blogService.add(blog);
         context.setBlog(blog);
         System.out.println("Blog \"" + blog.getTitle() + "\" created");
 
-        return ControllerResult.RETURN;
+        return ControllerResult.NORMAL;
     }
 
     public ControllerResult updateBlog(TwitterContext context) {
         System.out.print("Enter blog number: ");
         int num = context.getIn().nextInt();
-        if (num < 0 || num >= context.getBlogList().size()) {
+        if (num < 1 || context.getBlogList().size() < num) {
             System.out.println("Invalid blog number");
-            return ControllerResult.RETURN;
+            return ControllerResult.NORMAL;
         }
 
-        Blog blog = context.getBlogList().get(num);
+        Blog blog = context.getBlogList().get(num - 1);
         boolean modified = false;
         System.out.print("Modify title? [y/n]: ");
         if (context.getIn().next().toLowerCase().charAt(0) == 'y') {
@@ -84,7 +85,7 @@ public class BlogController extends AbstractMenuController {
             blogService.update(blog);
             System.out.println("Blog " + blog.getTitle() + " updated");
         }
-        return ControllerResult.RETURN;
+        return ControllerResult.NORMAL;
     }
 
     private ControllerResult searchBlog(TwitterContext context) {
@@ -104,7 +105,7 @@ public class BlogController extends AbstractMenuController {
             System.out.print("type: ");
             context.getBlogSearchContext().setBlogContent(context.getIn().next());
         }
-        return ControllerResult.RETURN;
+        return ControllerResult.NORMAL;
     }
 
     private ControllerResult deleteBlog(TwitterContext context) {
@@ -119,6 +120,6 @@ public class BlogController extends AbstractMenuController {
         blogService.delete(blog);
         System.out.println("Blog " + blog.getTitle() + " deleted");
 
-        return ControllerResult.RETURN;
+        return ControllerResult.NORMAL;
     }
 }

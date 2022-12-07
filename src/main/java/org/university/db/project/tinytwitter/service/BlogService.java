@@ -22,6 +22,7 @@ public class BlogService implements IService<Blog> {
     @Override
     public boolean add(Blog blog) {
         blogMapper.insert(blog);
+        blog.setBlogId(blogMapper.getIdByTitle(blog.getTitle()));
         return true;
     }
 
@@ -54,6 +55,10 @@ public class BlogService implements IService<Blog> {
     }
 
     public List<Blog> searchBlog(TwitterContext context) {
-        return new ArrayList<>();
+        if (context.getBlogSearchContext().getBlogTitle() == null) {
+            return blogMapper.selectAll();
+        } else {
+            return blogMapper.find(context.getBlogSearchContext().getBlogTitle());
+        }
     }
 }

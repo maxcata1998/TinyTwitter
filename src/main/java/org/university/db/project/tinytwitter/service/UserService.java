@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class RegisterService implements IService<User> {
+public class UserService implements IService<User> {
 
     @Resource
     private UserMapper userMapper;

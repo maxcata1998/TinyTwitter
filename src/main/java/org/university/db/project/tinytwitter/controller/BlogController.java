@@ -1,13 +1,11 @@
 package org.university.db.project.tinytwitter.controller;
 
-import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
-import org.university.db.project.tinytwitter.controller.base.AbstractShellController;
 import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.service.TwitterContext;
-import org.university.db.project.tinytwitter.service.TwitterService;
+import org.university.db.project.tinytwitter.service.BlogService;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.List;
 @Controller
 public class BlogController extends AbstractMenuController {
     @Autowired
-    TwitterService twitterService;
+    BlogService blogService;
 
     protected BlogController() {
         super("Browse Blogs");
@@ -31,7 +29,7 @@ public class BlogController extends AbstractMenuController {
 
     @Override
     protected ControllerResult process(TwitterContext context) {
-        List<Blog> blogList = twitterService.searchBlog(context);
+        List<Blog> blogList = blogService.searchBlog(context);
         context.setBlogList(blogList);
 
         for (int i = 0; i < blogList.size(); i++) {
@@ -50,7 +48,7 @@ public class BlogController extends AbstractMenuController {
         blog.setAuthor(context.getUser().getUserId());
         blog.setCreateDate(new Date());
         blog.setUpdateDate(blog.getCreateDate());
-        twitterService.add(blog);
+        blogService.add(blog);
         context.setBlog(blog);
         System.out.println("Blog \"" + blog.getTitle() + "\" created");
 
@@ -83,7 +81,7 @@ public class BlogController extends AbstractMenuController {
 
         if (modified) {
             blog.setUpdateDate(new Date());
-            twitterService.update(blog);
+            blogService.update(blog);
             System.out.println("Blog " + blog.getTitle() + " updated");
         }
         return ControllerResult.RETURN;
@@ -118,7 +116,7 @@ public class BlogController extends AbstractMenuController {
         }
 
         Blog blog = context.getBlogList().get(num);
-        twitterService.delete(blog);
+        blogService.delete(blog);
         System.out.println("Blog " + blog.getTitle() + " deleted");
 
         return ControllerResult.RETURN;

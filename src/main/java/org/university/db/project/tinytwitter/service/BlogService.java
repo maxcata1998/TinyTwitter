@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TwitterService implements IService<Blog> {
+public class BlogService implements IService<Blog> {
 
     private final BlogMapper blogMapper;
 
     @Autowired
-    public TwitterService(BlogMapper blogMapper) {
+    public BlogService(BlogMapper blogMapper) {
         this.blogMapper = blogMapper;
     }
 

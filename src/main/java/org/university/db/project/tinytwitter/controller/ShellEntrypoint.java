@@ -1,5 +1,6 @@
 package org.university.db.project.tinytwitter.controller;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -13,6 +14,7 @@ import org.university.db.project.tinytwitter.service.TwitterContext;
 import java.util.Scanner;
 
 @Controller
+
 public class ShellEntrypoint extends AbstractMenuController {
 
     @Autowired

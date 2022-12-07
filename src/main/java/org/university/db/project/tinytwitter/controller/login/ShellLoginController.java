@@ -9,7 +9,7 @@ import org.university.db.project.tinytwitter.entity.User;
 import org.university.db.project.tinytwitter.service.RegisterService;
 import org.university.db.project.tinytwitter.service.TwitterContext;
 
-@Controller("login")
+@Controller
 public class ShellLoginController extends AbstractMenuController implements IMenuController {
 
     @Autowired

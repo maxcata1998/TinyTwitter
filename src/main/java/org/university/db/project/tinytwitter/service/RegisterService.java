@@ -1,12 +1,18 @@
 package org.university.db.project.tinytwitter.service;
 
 import org.springframework.stereotype.Service;
+import org.university.db.project.tinytwitter.dao.UserMapper;
 import org.university.db.project.tinytwitter.entity.User;
 
 import java.util.List;
 
 @Service
 public class RegisterService implements IService<User> {
+    private UserMapper userMapper;
+    public RegisterService(UserMapper userMapper){
+        this.userMapper = userMapper;
+    }
+
     public boolean exist(String username) {
         return false;
     }
@@ -20,21 +26,21 @@ public class RegisterService implements IService<User> {
 
     @Override
     public boolean add(User user) {
-        return false;
+        return userMapper.insert(user) == 1;
     }
 
     @Override
     public boolean update(User user) {
-        return false;
+        return userMapper.updateByPrimaryKey(user)==1;
     }
 
     @Override
     public boolean delete(User user) {
-        return false;
+        return userMapper.deleteByPrimaryKey(user.getUserId())==1;
     }
 
     @Override
     public List<User> find(String user) {
-        return null;
+        return userMapper.find(user);
     }
 }

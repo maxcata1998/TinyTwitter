@@ -6,22 +6,23 @@ import org.university.db.project.tinytwitter.dao.BlogMapper;
 import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TwitterService implements IService<Blog> {
 
+    private final BlogMapper blogMapper;
+
     @Autowired
-    private BlogMapper blogMapper;
-
-    public TwitterService(){
-        //this.blogMapper = blogMapper;
-
+    public TwitterService(BlogMapper blogMapper) {
+        this.blogMapper = blogMapper;
     }
 
     @Override
     public boolean add(Blog blog) {
-         return blogMapper.insert(blog) == 1;
+        blogMapper.insert(blog);
+        return true;
     }
 
     @Override
@@ -39,11 +40,20 @@ public class TwitterService implements IService<Blog> {
         return blogMapper.find(pattern);
     }
 
+    @Override
+    public List<Blog> getAll() {
+        return null;
+    }
+
     public boolean like(User user, Blog blog) {
         return true;
     }
 
     public List<User> likedUser(Blog blog) {
         return null;
+    }
+
+    public List<Blog> searchBlog(TwitterContext context) {
+        return new ArrayList<>();
     }
 }

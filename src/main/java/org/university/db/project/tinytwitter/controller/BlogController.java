@@ -1,5 +1,6 @@
 package org.university.db.project.tinytwitter.controller;
 
+import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
@@ -9,6 +10,7 @@ import org.university.db.project.tinytwitter.service.TwitterContext;
 import org.university.db.project.tinytwitter.service.TwitterService;
 
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class BlogController extends AbstractMenuController {
@@ -23,10 +25,19 @@ public class BlogController extends AbstractMenuController {
     protected void registerMenu() {
         register("Create Blog", this::addBlog);
         register("Update Blog", this::updateBlog);
+        register("Search Blog", this::searchBlog);
+        register("Delete Blog", this::deleteBlog);
     }
 
-    public ControllerResult run1(TwitterContext context) {
-        return null;
+    @Override
+    protected ControllerResult process(TwitterContext context) {
+        List<Blog> blogList = twitterService.searchBlog(context);
+        context.setBlogList(blogList);
+
+        for (int i = 0; i < blogList.size(); i++) {
+            System.out.println((i+1) + ". " + blogList.get(i).getTitle());
+        }
+        return ControllerResult.NORMAL;
     }
 
     public ControllerResult addBlog(TwitterContext context) {
@@ -47,7 +58,14 @@ public class BlogController extends AbstractMenuController {
     }
 
     public ControllerResult updateBlog(TwitterContext context) {
-        Blog blog = context.getBlog();
+        System.out.print("Enter blog number: ");
+        int num = context.getIn().nextInt();
+        if (num < 0 || num >= context.getBlogList().size()) {
+            System.out.println("Invalid blog number");
+            return ControllerResult.RETURN;
+        }
+
+        Blog blog = context.getBlogList().get(num);
         boolean modified = false;
         System.out.print("Modify title? [y/n]: ");
         if (context.getIn().next().toLowerCase().charAt(0) == 'y') {
@@ -68,6 +86,41 @@ public class BlogController extends AbstractMenuController {
             twitterService.update(blog);
             System.out.println("Blog " + blog.getTitle() + " updated");
         }
+        return ControllerResult.RETURN;
+    }
+
+    private ControllerResult searchBlog(TwitterContext context) {
+        if (doSpecify("user", context.getIn())) {
+            System.out.print("user: ");
+            context.getBlogSearchContext().setUser(context.getIn().next());
+        }
+        if (doSpecify("title", context.getIn())) {
+            System.out.print("title: ");
+            context.getBlogSearchContext().setBlogTitle(context.getIn().next());
+        }
+        if (doSpecify("content", context.getIn())) {
+            System.out.print("content: ");
+            context.getBlogSearchContext().setBlogContent(context.getIn().next());
+        }
+        if (doSpecify("type", context.getIn())) {
+            System.out.print("type: ");
+            context.getBlogSearchContext().setBlogContent(context.getIn().next());
+        }
+        return ControllerResult.RETURN;
+    }
+
+    private ControllerResult deleteBlog(TwitterContext context) {
+        System.out.print("Enter blog number: ");
+        int num = context.getIn().nextInt();
+        if (num < 0 || num >= context.getBlogList().size()) {
+            System.out.println("Invalid blog number");
+            return ControllerResult.RETURN;
+        }
+
+        Blog blog = context.getBlogList().get(num);
+        twitterService.delete(blog);
+        System.out.println("Blog " + blog.getTitle() + " deleted");
+
         return ControllerResult.RETURN;
     }
 }

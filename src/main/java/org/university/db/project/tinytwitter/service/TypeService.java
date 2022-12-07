@@ -1,20 +1,19 @@
 package org.university.db.project.tinytwitter.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.university.db.project.tinytwitter.dao.TypeMapper;
 import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.entity.Type;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class TypeService implements IService<Type>{
 
+    @Resource
     private TypeMapper typeMapper;
-
-    public TypeService(TypeMapper typeMapper){
-        this.typeMapper = typeMapper;
-    }
 
     @Override
     public boolean add(Type service) {
@@ -34,6 +33,11 @@ public class TypeService implements IService<Type>{
     @Override
     public List<Type> find(String pattern) {
         return typeMapper.find(pattern);
+    }
+
+    @Override
+    public List<Type> getAll() {
+        return null;
     }
 
     public List<Blog> getCollection(Type type) {

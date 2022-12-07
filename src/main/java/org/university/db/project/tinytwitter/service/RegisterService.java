@@ -1,32 +1,33 @@
 package org.university.db.project.tinytwitter.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.university.db.project.tinytwitter.dao.UserMapper;
 import org.university.db.project.tinytwitter.entity.User;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class RegisterService implements IService<User> {
+
+    @Resource
     private UserMapper userMapper;
-    public RegisterService(UserMapper userMapper){
-        this.userMapper = userMapper;
-    }
 
     public boolean exist(String username) {
         return false;
     }
 
     public User login(String username, String password) {
-        if ("1".equals(username) && "2".equals(password)) {
-            return new User();
-        }
-        return null;
+        return userMapper.findByUNamePwd(username, password);
     }
 
     @Override
     public boolean add(User user) {
-        return userMapper.insert(user) == 1;
+        userMapper.insert(user);
+        user.setUserId(userMapper.getIdByUnamePwd(user.getName(), user.getPassword()));
+        return true;
     }
 
     @Override
@@ -42,5 +43,10 @@ public class RegisterService implements IService<User> {
     @Override
     public List<User> find(String user) {
         return userMapper.find(user);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return null;
     }
 }

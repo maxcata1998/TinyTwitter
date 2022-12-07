@@ -3,7 +3,6 @@ package org.university.db.project.tinytwitter.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 import org.university.db.project.tinytwitter.entity.Blog;
 
 @Mapper

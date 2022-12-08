@@ -10,14 +10,15 @@ import java.util.Objects;
 
 @Controller
 public class BlogViewController extends AbstractMenuController {
-    @Autowired
-    private BlogService blogService;
+    private final BlogService blogService;
+
+    private final CommentController commentController;
 
     @Autowired
-    private CommentController commentController;
-
-    protected BlogViewController() {
+    protected BlogViewController(BlogService blogService, CommentController commentController) {
         super("View Blog");
+        this.blogService = blogService;
+        this.commentController = commentController;
     }
 
     @Override

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-scan：当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。
-scanPeriod：设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒当scan为true时，此属性生效。默认的时间间隔为1分钟。
-debug：当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。
--->
-<configuration debug="false">
+<configuration>
 
     <!-- ch.qos.logback.core.ConsoleAppender 表示控制台输出 -->
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
@@ -13,8 +8,15 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
         </layout>
     </appender>
 
-    <root level="info">
+    <logger name="ch.qos" level="WARN">
+        <appender-ref ref="stdout"/>
+    </logger>
+    <logger name="org.hibernate" level="WARN">
+        <appender-ref ref="stdout"/>
+    </logger>
+    <root level="warn">
         <!-- 控制台输出日志-->
         <appender-ref ref="stdout" />
     </root>
+
 </configuration>

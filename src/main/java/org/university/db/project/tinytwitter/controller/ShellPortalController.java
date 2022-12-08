@@ -9,14 +9,12 @@ import org.university.db.project.tinytwitter.service.UserService;
 @Controller
 public class ShellPortalController extends AbstractMenuController {
 
-    @Autowired
-    UserService userService;
+    private final BlogController blogController;
 
     @Autowired
-    private BlogController blogController;
-
-    protected ShellPortalController() {
+    protected ShellPortalController(BlogController blogController) {
         super("Login");
+        this.blogController = blogController;
     }
 
     @Override

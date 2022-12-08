@@ -2,10 +2,7 @@ package org.university.db.project.tinytwitter.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.university.db.project.tinytwitter.entity.User;
 
 @Mapper
@@ -56,6 +53,9 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     @Select("select user_id, name, email from user where name = #{username} and password = #{password}")
+    @Results(id = "userMap", value = {
+            @Result(column = "user_id", property = "userId")
+    })
     User findByUNamePwd(String username, String password);
 
     @Select("select user_id from user where name = #{username} and password = #{password}")

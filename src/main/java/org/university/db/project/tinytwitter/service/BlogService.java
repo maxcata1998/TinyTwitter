@@ -6,6 +6,7 @@ import org.university.db.project.tinytwitter.dao.BlogMapper;
 import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.entity.User;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -37,8 +38,10 @@ public class BlogService implements IService<Blog> {
 
     @Override
     public List<Blog> find(String pattern) {
-        return blogMapper.find(pattern);
+//        return blogMapper.find(pattern);
+        return null;
     }
+
 
     @Override
     public List<Blog> getAll() {
@@ -61,7 +64,8 @@ public class BlogService implements IService<Blog> {
         if (searchContext.getBlogTitle() == null) {
             return blogMapper.selectAll();
         } else {
-            return blogMapper.find(searchContext.getBlogTitle());
+            //TODO search with searchContext
+            return Collections.emptyList();
         }
     }
 }

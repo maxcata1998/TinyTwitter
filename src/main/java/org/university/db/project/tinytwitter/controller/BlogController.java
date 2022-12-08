@@ -1,6 +1,5 @@
 package org.university.db.project.tinytwitter.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.entity.Blog;
@@ -12,14 +11,15 @@ import java.util.List;
 
 @Controller
 public class BlogController extends AbstractMenuController {
-    @Autowired
-    BlogService blogService;
 
-    @Autowired
-    BlogViewController blogViewController;
+    private final BlogService blogService;
 
-    protected BlogController() {
+    private final BlogViewController blogViewController;
+
+    protected BlogController(BlogService blogService, BlogViewController blogViewController) {
         super("Browse Blogs");
+        this.blogService = blogService;
+        this.blogViewController = blogViewController;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class BlogController extends AbstractMenuController {
         register("Update Blog", this::updateBlog);
         register("Search Blog", this::searchBlog);
         register("Delete Blog", this::deleteBlog);
-        register("View Blog", blogViewController);
+        register("View Blog", this::viewBlog);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BlogController extends AbstractMenuController {
 
         for (int i = 0; i < blogList.size(); i++) {
             Blog blog = blogList.get(i);
-            System.out.printf("%2d. | Title : %s", i+1, blog.getTitle());
+            System.out.printf("%2d. | Title : %s\n", i + 1, blog.getTitle());
             if (searchContext.getUser() != null) {
                 System.out.println("    | Author: " + blog.getUser().getName());
             }
@@ -50,21 +50,21 @@ public class BlogController extends AbstractMenuController {
                 if (pieces[0].length() <= 10) {
                     sb.append(pieces[0]);
                 } else {
-                    sb.append("... ").append(pieces[0].substring(pieces.length-10)).append(keyword);
+                    sb.append("... ").append(pieces[0].substring(pieces.length - 10)).append(keyword);
                 }
                 for (int j = 1; j < pieces.length - 1; j++) {
                     if (pieces[j].length() <= 20) {
                         sb.append(pieces[j]).append(keyword);
                     } else {
                         sb.append(pieces[j], 0, 10).append(" ... ")
-                                .append(pieces[j].substring(pieces[j].length()-10))
+                                .append(pieces[j].substring(pieces[j].length() - 10))
                                 .append(keyword);
                     }
                 }
-                if (pieces[pieces.length-1].length() <= 10) {
-                    sb.append(pieces[pieces.length-1]);
+                if (pieces[pieces.length - 1].length() <= 10) {
+                    sb.append(pieces[pieces.length - 1]);
                 } else {
-                    sb.append(pieces[pieces.length-1], 0, 10).append(" ...");
+                    sb.append(pieces[pieces.length - 1], 0, 10).append(" ...");
                 }
                 System.out.println("    | Content: " + sb);
             }
@@ -83,6 +83,7 @@ public class BlogController extends AbstractMenuController {
         blog.setCreateDate(new Date());
         blog.setUpdateDate(blog.getCreateDate());
         blog.setAuthor(context.getUser().getUserId());
+        blog.setUser(context.getUser());
         blogService.add(blog);
         context.setBlog(blog);
         System.out.println("Blog \"" + blog.getTitle() + "\" created");
@@ -134,5 +135,16 @@ public class BlogController extends AbstractMenuController {
         System.out.println("Blog " + blog.getTitle() + " deleted");
 
         return ControllerResult.NORMAL;
+    }
+
+    private ControllerResult viewBlog(TwitterContext context) {
+        System.out.print("Enter blog number: ");
+        int num = context.getIn().nextInt();
+        if (num < 1 || context.getBlogList().size() < num) {
+            System.out.println("Invalid blog number");
+            return ControllerResult.NORMAL;
+        }
+        context.setBlog(context.getBlogList().get(num - 1));
+        return blogViewController.run(context);
     }
 }

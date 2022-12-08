@@ -14,11 +14,12 @@ import java.util.List;
 @Controller
 public class CommentController extends AbstractMenuController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    protected CommentController() {
+    @Autowired
+    protected CommentController(CommentService commentService) {
         super("View Comment");
+        this.commentService = commentService;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class CommentController extends AbstractMenuController {
         }
 
         for (int i = 0; i < comments.size(); i++) {
-            System.out.printf("%2d. | Author  : %s", i + 1, comments.get(i).getAuthor().getName());
+            System.out.printf("%2d. | Author  : %s\n", i + 1, comments.get(i).getAuthor().getName());
             System.out.println("    | Date    : " + comments.get(i).getDate());
             System.out.println("    | Comment : " + comments.get(i).getContent());
         }

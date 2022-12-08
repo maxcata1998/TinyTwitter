@@ -1,8 +1,7 @@
-package org.university.db.project.tinytwitter.controller.blog;
+package org.university.db.project.tinytwitter.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.university.db.project.tinytwitter.controller.ControllerResult;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.service.BlogService;
 import org.university.db.project.tinytwitter.service.TwitterContext;
@@ -14,14 +13,20 @@ public class BlogViewController extends AbstractMenuController {
     @Autowired
     private BlogService blogService;
 
+    @Autowired
+    private CommentController commentController;
+
     protected BlogViewController() {
         super("View Blog");
     }
 
     @Override
     protected void registerMenu() {
-        register("like", this::like);
-        register("collect", this::collect);
+        register("Like", this::like);
+        register("Unlike", this::unlike);
+        register("Collect", this::collect);
+        register("Un-collect", this::unCollect);
+        register("Comments", commentController);
     }
 
     @Override
@@ -41,7 +46,15 @@ public class BlogViewController extends AbstractMenuController {
         if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
             System.out.println("You cannot like your own blog");
         }
-        blogService.like(context.getUser(), context.getBlog());
+        blogService.like(context.getUser(), context.getBlog(), true);
+        return ControllerResult.NORMAL;
+    }
+
+    private ControllerResult unlike(TwitterContext context) {
+        if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
+            System.out.println("You cannot unlike your own blog");
+        }
+        blogService.like(context.getUser(), context.getBlog(), false);
         return ControllerResult.NORMAL;
     }
 
@@ -49,7 +62,15 @@ public class BlogViewController extends AbstractMenuController {
         if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
             System.out.println("You cannot collect your own blog");
         }
-        blogService.collect(context.getUser(), context.getBlog());
+        blogService.collect(context.getUser(), context.getBlog(), true);
+        return ControllerResult.NORMAL;
+    }
+
+    private ControllerResult unCollect(TwitterContext context) {
+        if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
+            System.out.println("You cannot un-collect your own blog");
+        }
+        blogService.collect(context.getUser(), context.getBlog(), false);
         return ControllerResult.NORMAL;
     }
 }

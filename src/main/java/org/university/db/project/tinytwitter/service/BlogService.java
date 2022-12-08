@@ -6,7 +6,6 @@ import org.university.db.project.tinytwitter.dao.BlogMapper;
 import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.entity.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,11 +45,11 @@ public class BlogService implements IService<Blog> {
         return null;
     }
 
-    public boolean like(User user, Blog blog) {
+    public boolean like(User user, Blog blog, boolean isLike) {
         return true;
     }
 
-    public boolean collect(User user, Blog blog) {
+    public boolean collect(User user, Blog blog, boolean doCollect) {
         return true;
     }
 
@@ -58,11 +57,11 @@ public class BlogService implements IService<Blog> {
         return null;
     }
 
-    public List<Blog> searchBlog(TwitterContext context) {
-        if (context.getBlogSearchContext().getBlogTitle() == null) {
+    public List<Blog> searchBlog(TwitterContext.BlogSearchContext searchContext) {
+        if (searchContext.getBlogTitle() == null) {
             return blogMapper.selectAll();
         } else {
-            return blogMapper.find(context.getBlogSearchContext().getBlogTitle());
+            return blogMapper.find(searchContext.getBlogTitle());
         }
     }
 }

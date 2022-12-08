@@ -1,12 +1,11 @@
-package org.university.db.project.tinytwitter.controller.blog;
+package org.university.db.project.tinytwitter.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.university.db.project.tinytwitter.controller.ControllerResult;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.entity.Blog;
-import org.university.db.project.tinytwitter.service.TwitterContext;
 import org.university.db.project.tinytwitter.service.BlogService;
+import org.university.db.project.tinytwitter.service.TwitterContext;
 
 import java.util.Date;
 import java.util.List;
@@ -34,11 +33,41 @@ public class BlogController extends AbstractMenuController {
 
     @Override
     protected ControllerResult process(TwitterContext context) {
-        List<Blog> blogList = blogService.searchBlog(context);
+        TwitterContext.BlogSearchContext searchContext = context.getBlogSearchContext();
+        List<Blog> blogList = blogService.searchBlog(searchContext);
         context.setBlogList(blogList);
 
         for (int i = 0; i < blogList.size(); i++) {
-            System.out.println((i + 1) + ". " + blogList.get(i).getTitle());
+            Blog blog = blogList.get(i);
+            System.out.printf("%2d. | Title : %s", i+1, blog.getTitle());
+            if (searchContext.getUser() != null) {
+                System.out.println("    | Author: " + blog.getUser().getName());
+            }
+            if (searchContext.getBlogContent() != null) {
+                String keyword = searchContext.getBlogContent();
+                String[] pieces = blog.getContent().split(keyword);
+                StringBuilder sb = new StringBuilder();
+                if (pieces[0].length() <= 10) {
+                    sb.append(pieces[0]);
+                } else {
+                    sb.append("... ").append(pieces[0].substring(pieces.length-10)).append(keyword);
+                }
+                for (int j = 1; j < pieces.length - 1; j++) {
+                    if (pieces[j].length() <= 20) {
+                        sb.append(pieces[j]).append(keyword);
+                    } else {
+                        sb.append(pieces[j], 0, 10).append(" ... ")
+                                .append(pieces[j].substring(pieces[j].length()-10))
+                                .append(keyword);
+                    }
+                }
+                if (pieces[pieces.length-1].length() <= 10) {
+                    sb.append(pieces[pieces.length-1]);
+                } else {
+                    sb.append(pieces[pieces.length-1], 0, 10).append(" ...");
+                }
+                System.out.println("    | Content: " + sb);
+            }
         }
         return ControllerResult.NORMAL;
     }
@@ -82,10 +111,13 @@ public class BlogController extends AbstractMenuController {
     }
 
     private ControllerResult searchBlog(TwitterContext context) {
-        querySpecifyString("user", context.getIn(), context.getBlogSearchContext()::setUser);
-        querySpecifyString("title", context.getIn(), context.getBlogSearchContext()::setBlogTitle);
-        querySpecifyString("content", context.getIn(), context.getBlogSearchContext()::setBlogContent);
-        querySpecifyString("type", context.getIn(), context.getBlogSearchContext()::setBlogType);
+        TwitterContext.BlogSearchContext searchContext = context.getBlogSearchContext();
+        querySpecifyString("user", context.getIn(), searchContext::setUser);
+        querySpecifyString("title", context.getIn(), searchContext::setBlogTitle);
+        querySpecifyString("content", context.getIn(), searchContext::setBlogContent);
+        querySpecifyString("type", context.getIn(), searchContext::setBlogType);
+        querySpecifyBool("like", context.getIn(), searchContext::setIsLike);
+        querySpecifyBool("collection", context.getIn(), searchContext::setIsCollected);
         return ControllerResult.NORMAL;
     }
 

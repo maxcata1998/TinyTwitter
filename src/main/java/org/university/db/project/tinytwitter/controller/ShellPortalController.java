@@ -3,7 +3,7 @@ package org.university.db.project.tinytwitter.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
-import org.university.db.project.tinytwitter.controller.blog.BlogController;
+import org.university.db.project.tinytwitter.service.TwitterContext;
 import org.university.db.project.tinytwitter.service.UserService;
 
 @Controller
@@ -11,9 +11,6 @@ public class ShellPortalController extends AbstractMenuController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    private CollectionController collectionController;
 
     @Autowired
     private BlogController blogController;
@@ -24,7 +21,26 @@ public class ShellPortalController extends AbstractMenuController {
 
     @Override
     protected void registerMenu() {
-        register("Blogs", blogController);//blogController);
-        register("Collections", collectionController);//collectionController);
+        register("Browse Blogs", this::browseBlogs);//blogController);
+        register("My Blogs", this::browseMyBlogs);
+        register("My Collections", this::browseMyCollections);//collectionController);
+    }
+
+    private ControllerResult browseBlogs(TwitterContext context) {
+        context.getBlogSearchContext().clear();
+        return blogController.run(context);
+    }
+
+    private ControllerResult browseMyBlogs(TwitterContext context) {
+        context.getBlogSearchContext().clear();
+        context.getBlogSearchContext().setUser(context.getUser().getName());
+        return blogController.run(context);
+    }
+
+    private ControllerResult browseMyCollections(TwitterContext context) {
+        context.getBlogSearchContext().clear();
+        context.getBlogSearchContext().setUser(context.getUser().getName());
+        context.getBlogSearchContext().setIsCollected(true);
+        return blogController.run(context);
     }
 }

@@ -37,6 +37,15 @@ public class TwitterContext {
         private String blogContent;
 
         private String blogType;
+
+        private Boolean isLike;
+
+        private Boolean isCollected;
+
+        public void clear() {
+            user = blogTitle = blogContent = blogType = null;
+            isLike = isCollected = null;
+        }
     }
 
     @Data

@@ -34,12 +34,22 @@ public abstract class AbstractShellController implements IShellController {
         return false;
     }
 
-    protected boolean querySpecifyString(String param, Scanner scanner, Consumer<String> consumer) {
-        return queryAndSet("Modify", param, scanner::next, scanner::next, consumer);
+    protected void querySpecifyString(String param, Scanner scanner, Consumer<String> consumer) {
+        queryAndSet("Modify", param, scanner::next, scanner::next, consumer);
     }
 
     protected boolean querySpecifyInt(String param, Scanner scanner, Consumer<Integer> consumer) {
         return queryAndSet("Modify", param, scanner::next, scanner::nextInt, consumer);
+    }
+
+    protected void querySpecifyBool(String param, Scanner scanner, Consumer<Boolean> consumer) {
+        System.out.print("Specify " + param + " ? [y/n]: ");
+        if (scanner.next().toLowerCase().charAt(0) == 'y') {
+            System.out.print(param + " ([y/n]): ");
+            consumer.accept(scanner.next().toLowerCase().charAt(0) == 'y');
+        } else {
+            consumer.accept(null);
+        }
     }
 
     protected boolean queryModifyString(String param, Scanner scanner, Consumer<String> consumer) {

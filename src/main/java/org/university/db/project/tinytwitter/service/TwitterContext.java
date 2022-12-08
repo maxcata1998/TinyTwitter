@@ -2,6 +2,7 @@ package org.university.db.project.tinytwitter.service;
 
 import lombok.Data;
 import org.university.db.project.tinytwitter.entity.Blog;
+import org.university.db.project.tinytwitter.entity.Comment;
 import org.university.db.project.tinytwitter.entity.User;
 
 import java.util.List;
@@ -15,13 +16,17 @@ public class TwitterContext {
 
     private Blog blog;
 
+    private Comment comment;
+
     private Object updateObj;
 
     private String blogKeyword = null;
 
     private List<Blog> blogList = null;
 
-    private BlogSearchContext blogSearchContext = new BlogSearchContext();
+    private final BlogSearchContext blogSearchContext = new BlogSearchContext();
+
+    private final CommentSearchContext commentSearchContext = new CommentSearchContext();
 
     @Data
     public static class BlogSearchContext {
@@ -30,5 +35,14 @@ public class TwitterContext {
         private String blogTitle;
 
         private String blogContent;
+
+        private String blogType;
+    }
+
+    @Data
+    public static class CommentSearchContext {
+        private String user;
+
+        private String content;
     }
 }

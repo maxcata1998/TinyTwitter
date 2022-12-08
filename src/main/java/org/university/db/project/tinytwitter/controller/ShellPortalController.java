@@ -3,6 +3,7 @@ package org.university.db.project.tinytwitter.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
+import org.university.db.project.tinytwitter.controller.blog.BlogController;
 import org.university.db.project.tinytwitter.service.UserService;
 
 @Controller

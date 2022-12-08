@@ -6,6 +6,7 @@ import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.entity.Comment;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,7 +40,11 @@ public class CommentService implements IService<Comment> {
         return null;
     }
 
+    public List<Comment> searchComments(TwitterContext context) {
+        return new ArrayList<>();
+    }
+
     public List<Comment> getBlogComments(Blog blog) {
-        return null;
+        return commentMapper.getCommentAndUserByBlogId(blog.getBlogId());
     }
 }

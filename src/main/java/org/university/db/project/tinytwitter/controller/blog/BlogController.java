@@ -1,7 +1,8 @@
-package org.university.db.project.tinytwitter.controller;
+package org.university.db.project.tinytwitter.controller.blog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.university.db.project.tinytwitter.controller.ControllerResult;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.service.TwitterContext;
@@ -15,6 +16,9 @@ public class BlogController extends AbstractMenuController {
     @Autowired
     BlogService blogService;
 
+    @Autowired
+    BlogViewController blogViewController;
+
     protected BlogController() {
         super("Browse Blogs");
     }
@@ -25,6 +29,7 @@ public class BlogController extends AbstractMenuController {
         register("Update Blog", this::updateBlog);
         register("Search Blog", this::searchBlog);
         register("Delete Blog", this::deleteBlog);
+        register("View Blog", blogViewController);
     }
 
     @Override
@@ -33,7 +38,7 @@ public class BlogController extends AbstractMenuController {
         context.setBlogList(blogList);
 
         for (int i = 0; i < blogList.size(); i++) {
-            System.out.println((i+1) + ". " + blogList.get(i).getTitle());
+            System.out.println((i + 1) + ". " + blogList.get(i).getTitle());
         }
         return ControllerResult.NORMAL;
     }
@@ -65,20 +70,8 @@ public class BlogController extends AbstractMenuController {
         }
 
         Blog blog = context.getBlogList().get(num - 1);
-        boolean modified = false;
-        System.out.print("Modify title? [y/n]: ");
-        if (context.getIn().next().toLowerCase().charAt(0) == 'y') {
-            System.out.print("title: ");
-            blog.setTitle(context.getIn().next());
-            modified = true;
-        }
-
-        System.out.print("Modify content? [y/n]: ");
-        if (context.getIn().next().toLowerCase().charAt(0) == 'y') {
-            System.out.print("content: ");
-            blog.setContent(context.getIn().next());
-            modified = true;
-        }
+        boolean modified = queryModifyString("title", context.getIn(), blog::setTitle)
+                || queryModifyString("content", context.getIn(), blog::setTitle);
 
         if (modified) {
             blog.setUpdateDate(new Date());
@@ -89,22 +82,10 @@ public class BlogController extends AbstractMenuController {
     }
 
     private ControllerResult searchBlog(TwitterContext context) {
-        if (doSpecify("user", context.getIn())) {
-            System.out.print("user: ");
-            context.getBlogSearchContext().setUser(context.getIn().next());
-        }
-        if (doSpecify("title", context.getIn())) {
-            System.out.print("title: ");
-            context.getBlogSearchContext().setBlogTitle(context.getIn().next());
-        }
-        if (doSpecify("content", context.getIn())) {
-            System.out.print("content: ");
-            context.getBlogSearchContext().setBlogContent(context.getIn().next());
-        }
-        if (doSpecify("type", context.getIn())) {
-            System.out.print("type: ");
-            context.getBlogSearchContext().setBlogContent(context.getIn().next());
-        }
+        querySpecifyString("user", context.getIn(), context.getBlogSearchContext()::setUser);
+        querySpecifyString("title", context.getIn(), context.getBlogSearchContext()::setBlogTitle);
+        querySpecifyString("content", context.getIn(), context.getBlogSearchContext()::setBlogContent);
+        querySpecifyString("type", context.getIn(), context.getBlogSearchContext()::setBlogType);
         return ControllerResult.NORMAL;
     }
 

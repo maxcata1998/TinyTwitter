@@ -50,6 +50,10 @@ public class BlogService implements IService<Blog> {
         return true;
     }
 
+    public boolean collect(User user, Blog blog) {
+        return true;
+    }
+
     public List<User> likedUser(Blog blog) {
         return null;
     }

@@ -37,7 +37,7 @@ public class CommentService implements IService<Comment> {
 
     @Override
     public List<Comment> getAll() {
-        return null;
+        return commentMapper.selectAll();
     }
 
     public List<Comment> searchComments(TwitterContext context) {

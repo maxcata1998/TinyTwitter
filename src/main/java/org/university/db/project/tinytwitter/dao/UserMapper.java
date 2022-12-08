@@ -31,6 +31,7 @@ public interface UserMapper {
      *
      * @mbggenerated
      */
+
     User selectByPrimaryKey(Integer userId);
 
     /**

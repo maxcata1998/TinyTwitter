@@ -14,6 +14,7 @@ public interface CommentMapper {
      *
      * @mbggenerated
      */
+    @Delete("delete from comment where comment_id = #{commentId}")
     int deleteByPrimaryKey(Integer commentId);
 
     /**
@@ -32,6 +33,8 @@ public interface CommentMapper {
      *
      * @mbggenerated
      */
+    @Select("select blog_id, title, create_date, update_date, author, content from " +
+            "comment where blog_id = #{blogId}")
     Comment selectByPrimaryKey(Integer commentId);
 
     /**

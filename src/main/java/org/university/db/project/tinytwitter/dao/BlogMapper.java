@@ -36,6 +36,8 @@ public interface BlogMapper {
      *
      * @mbggenerated
      */
+    @Select("select blog_id, title, create_date, update_date, author, content from " +
+            "blog where blog_id = #{blogId}")
     Blog selectByPrimaryKey(Integer blogId);
 
     /**
@@ -77,4 +79,20 @@ public interface BlogMapper {
             "      content = #{content}" +
             "    where blog_id = #{blogId}")
     int updateByPrimaryKey(Blog record);
+
+    @Insert("insert into like(blog_id, user_id) values (#{user_id}, #{blog_id}")
+    void addLike(int user_id, int blog_id);
+
+    @Delete("delete from like where user_id = #{user_id} and blog_id = #{blog_id}")
+    void deleteLike(int user_id, int blog_id);
+
+    @Insert("insert into collection(blog_id, user_id) values (#{user_id}, #{blog_id}")
+    void addCollect(int user_id, int blog_id);
+
+    @Delete("delete from collection where user_id = #{user_id} and blog_id = #{blog_id}")
+    void deleteCollect(int user_id, int blog_id);
+
+
+
+
 }

@@ -45,14 +45,26 @@ public class BlogService implements IService<Blog> {
 
     @Override
     public List<Blog> getAll() {
-        return null;
+        return blogMapper.selectAll();
     }
 
     public boolean like(User user, Blog blog, boolean isLike) {
+        if(isLike) {
+            blogMapper.addLike(user.getUserId(), blog.getBlogId());
+        }
+        else{
+            blogMapper.deleteLike(user.getUserId(), blog.getBlogId());
+        }
         return true;
     }
 
     public boolean collect(User user, Blog blog, boolean doCollect) {
+        if(doCollect) {
+            blogMapper.addCollect(user.getUserId(), blog.getBlogId());
+        }
+        else{
+            blogMapper.deleteCollect(user.getUserId(), blog.getBlogId());
+        }
         return true;
     }
 

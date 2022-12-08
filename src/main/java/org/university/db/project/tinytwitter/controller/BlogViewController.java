@@ -46,32 +46,36 @@ public class BlogViewController extends AbstractMenuController {
     private ControllerResult like(TwitterContext context) {
         if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
             System.out.println("You cannot like your own blog");
+        } else {
+            blogService.like(context.getUser(), context.getBlog(), true);
         }
-        blogService.like(context.getUser(), context.getBlog(), true);
         return ControllerResult.NORMAL;
     }
 
     private ControllerResult unlike(TwitterContext context) {
         if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
             System.out.println("You cannot unlike your own blog");
+        } else {
+            blogService.like(context.getUser(), context.getBlog(), false);
         }
-        blogService.like(context.getUser(), context.getBlog(), false);
         return ControllerResult.NORMAL;
     }
 
     private ControllerResult collect(TwitterContext context) {
         if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
             System.out.println("You cannot collect your own blog");
+        } else {
+            blogService.collect(context.getUser(), context.getBlog(), true);
         }
-        blogService.collect(context.getUser(), context.getBlog(), true);
         return ControllerResult.NORMAL;
     }
 
     private ControllerResult unCollect(TwitterContext context) {
         if (Objects.equals(context.getBlog().getUser().getUserId(), context.getUser().getUserId())) {
             System.out.println("You cannot un-collect your own blog");
+        } else {
+            blogService.collect(context.getUser(), context.getBlog(), false);
         }
-        blogService.collect(context.getUser(), context.getBlog(), false);
         return ControllerResult.NORMAL;
     }
 }

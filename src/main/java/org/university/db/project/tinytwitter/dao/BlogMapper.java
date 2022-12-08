@@ -80,13 +80,13 @@ public interface BlogMapper {
             "    where blog_id = #{blogId}")
     int updateByPrimaryKey(Blog record);
 
-    @Insert("insert into like(blog_id, user_id) values (#{user_id}, #{blog_id}")
+    @Insert("insert into `like`(blog_id, user_id) value (#{user_id}, #{blog_id})")
     void addLike(int user_id, int blog_id);
 
     @Delete("delete from like where user_id = #{user_id} and blog_id = #{blog_id}")
     void deleteLike(int user_id, int blog_id);
 
-    @Insert("insert into collection(blog_id, user_id) values (#{user_id}, #{blog_id}")
+    @Insert("insert into collection(blog_id, user_id) value (#{user_id}, #{blog_id})")
     void addCollect(int user_id, int blog_id);
 
     @Delete("delete from collection where user_id = #{user_id} and blog_id = #{blog_id}")

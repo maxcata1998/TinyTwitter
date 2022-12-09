@@ -13,12 +13,11 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
     private boolean refresh;
 
-    protected AbstractMenuController(String label) {
-        this(label, false);
+    protected AbstractMenuController() {
+        this(false);
     }
 
-    protected AbstractMenuController(String label, boolean refresh) {
-        super(label);
+    protected AbstractMenuController(boolean refresh) {
         this.refresh = refresh;
     }
 

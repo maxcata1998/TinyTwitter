@@ -17,7 +17,7 @@ public class CommentController extends AbstractMenuController {
 
     @Autowired
     protected CommentController(CommentService commentService) {
-        super("View Comment");
+        super();
         this.commentService = commentService;
     }
 

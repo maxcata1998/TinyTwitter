@@ -16,7 +16,7 @@ public class BlogViewController extends AbstractMenuController {
 
     @Autowired
     protected BlogViewController(BlogService blogService, CommentController commentController) {
-        super("View Blog", true);
+        super(true);
         this.blogService = blogService;
         this.commentController = commentController;
     }

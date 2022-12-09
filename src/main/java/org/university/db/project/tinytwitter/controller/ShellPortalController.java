@@ -12,7 +12,7 @@ public class ShellPortalController extends AbstractMenuController {
 
     @Autowired
     protected ShellPortalController(BlogController blogController) {
-        super("Login");
+        super();
         this.blogController = blogController;
     }
 

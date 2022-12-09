@@ -17,7 +17,7 @@ public class BlogController extends AbstractMenuController {
     private final BlogViewController blogViewController;
 
     protected BlogController(BlogService blogService, BlogViewController blogViewController) {
-        super("Browse Blogs");
+        super();
         this.blogService = blogService;
         this.blogViewController = blogViewController;
     }

@@ -24,16 +24,18 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
     @Override
     final public ControllerResult run(TwitterContext context) {
-        if (controllerNames == null || refresh) {
-            if (controllerNames== null) {
-                controllerNames = new ArrayList<>();
-                controllerMap = new HashMap<>();
-            }
-            registerMenu(context);
-        }
-
         ControllerResult result = ControllerResult.NORMAL;
         while (result == ControllerResult.NORMAL) {
+            if (controllerNames == null || refresh) {
+                if (controllerNames== null) {
+                    controllerNames = new ArrayList<>();
+                    controllerMap = new HashMap<>();
+                } else {
+                    controllerNames.clear();
+                }
+                registerMenu(context);
+            }
+
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             result = process(context);
             if (result != ControllerResult.NORMAL) {
@@ -41,14 +43,14 @@ public abstract class AbstractMenuController extends AbstractShellController {
             }
 
             int selection = menu(context);
-            if (selection == controllerMap.size() + 1) {
+            if (selection == controllerNames.size() + 1) {
                 context.setUser(null);
                 return ControllerResult.LOGOUT;
             }
-            if (selection == controllerMap.size() + 2) {
+            if (selection == controllerNames.size() + 2) {
                 return ControllerResult.NORMAL;
             }
-            if (selection == controllerMap.size() + 3) {
+            if (selection == controllerNames.size() + 3) {
                 return ControllerResult.EXIT;
             }
             IShellController controller = controllerMap.get(controllerNames.get(selection - 1));

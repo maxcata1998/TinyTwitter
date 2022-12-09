@@ -66,7 +66,7 @@ public interface BlogMapper {
             "where user_id = #{user.userId} and blog_id = #{blog.blogId}")
     boolean isLike(User user, Blog blog);
 
-    @Select("select count(1)>0 is_collect from collect " +
+    @Select("select count(1)>0 is_collect from collection " +
             "where user_id = #{user.userId} and blog_id = #{blog.blogId}")
     boolean isCollect(User user, Blog blog);
 }

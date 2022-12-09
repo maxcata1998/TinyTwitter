@@ -14,7 +14,13 @@ public class ShellEntrypoint {
 
         ShellUserController registerController = context.getBean(ShellUserController.class);
 
-        System.out.println("Welcome to Tiny Twitter");
+        System.out.println("########################################");
+        System.out.println("##      Welcome to Tiny Twitter       ##");
+        System.out.println("##       Released on Dec.9 2022       ##");
+        System.out.println("##           Version 1.2.2            ##");
+        System.out.println("##  Co founder: Tianrun Yan, Xiao Ma  ##");
+        System.out.println("########################################");
+
 
         TwitterContext twitterContext = new TwitterContext();
         twitterContext.setIn(new Scanner(System.in));
@@ -28,6 +34,8 @@ public class ShellEntrypoint {
             }
         }
 
-        System.out.println("See you");
+        System.out.println("########################################");
+        System.out.println("##    Wish you a nice day. See you    ##");
+        System.out.println("########################################");
     }
 }

@@ -1,6 +1,5 @@
 package org.university.db.project.tinytwitter.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.controller.base.IMenuController;
@@ -22,7 +21,7 @@ public class ShellUserController extends AbstractMenuController implements IMenu
     }
 
     @Override
-    protected void registerMenu() {
+    protected void registerMenu(TwitterContext context) {
         register("Login", this::login);
         register("Register", this::register);
     }

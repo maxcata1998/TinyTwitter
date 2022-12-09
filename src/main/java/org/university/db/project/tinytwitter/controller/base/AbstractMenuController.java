@@ -4,7 +4,6 @@ import org.university.db.project.tinytwitter.controller.ControllerResult;
 import org.university.db.project.tinytwitter.service.TwitterContext;
 
 import java.util.*;
-import java.util.function.Function;
 
 public abstract class AbstractMenuController extends AbstractShellController {
 
@@ -12,20 +11,30 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
     private List<String> controllerNames;
 
+    private boolean refresh;
+
     protected AbstractMenuController(String label) {
+        this(label, false);
+    }
+
+    protected AbstractMenuController(String label, boolean refresh) {
         super(label);
+        this.refresh = refresh;
     }
 
     @Override
     final public ControllerResult run(TwitterContext context) {
-        if (controllerNames == null) {
-            controllerNames = new ArrayList<>();
-            controllerMap = new HashMap<>();
-            registerMenu();
+        if (controllerNames == null || refresh) {
+            if (controllerNames== null) {
+                controllerNames = new ArrayList<>();
+                controllerMap = new HashMap<>();
+            }
+            registerMenu(context);
         }
 
         ControllerResult result = ControllerResult.NORMAL;
         while (result == ControllerResult.NORMAL) {
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             result = process(context);
             if (result != ControllerResult.NORMAL) {
                 return result;
@@ -50,7 +59,10 @@ public abstract class AbstractMenuController extends AbstractShellController {
         return result;
     }
 
-    protected void registerMenu() {
+    protected void registerMenu(TwitterContext context) {
+    }
+
+    protected void onReturn(TwitterContext context) {
     }
 
     protected ControllerResult process(TwitterContext context) {
@@ -64,12 +76,13 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
 
     private int menu(TwitterContext context) {
-        System.out.println("========================================");
+        System.out.println();
         System.out.println("Please select your option: ");
         for (int i = 1; i <= controllerNames.size(); i++) {
             System.out.println(i + ". " + controllerNames.get(i-1));
         }
-        System.out.println("========================================");
+        System.out.println("----------------------------------------");
+
         System.out.println((controllerNames.size() + 1) + ". Logout");
         System.out.println((controllerNames.size() + 2) + ". Return");
         System.out.println((controllerNames.size() + 3) + ". Exit");

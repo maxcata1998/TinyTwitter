@@ -23,7 +23,7 @@ public class BlogController extends AbstractMenuController {
     }
 
     @Override
-    protected void registerMenu() {
+    protected void registerMenu(TwitterContext context) {
         register("Create Blog", this::addBlog);
         register("Update Blog", this::updateBlog);
         register("Search Blog", this::searchBlog);
@@ -34,7 +34,7 @@ public class BlogController extends AbstractMenuController {
     @Override
     protected ControllerResult process(TwitterContext context) {
         TwitterContext.BlogSearchContext searchContext = context.getBlogSearchContext();
-        List<Blog> blogList = blogService.searchBlog(searchContext);
+        List<Blog> blogList = blogService.searchBlog(context.getUser(), searchContext);
         context.setBlogList(blogList);
 
         for (int i = 0; i < blogList.size(); i++) {

@@ -7,6 +7,7 @@ import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.entity.User;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -22,7 +23,6 @@ public class BlogService implements IService<Blog> {
     @Override
     public boolean add(Blog blog) {
         blogMapper.insert(blog);
-        blog.setBlogId(blogMapper.getIdByTitle(blog.getTitle()));
         return true;
     }
 
@@ -36,48 +36,52 @@ public class BlogService implements IService<Blog> {
         return blogMapper.deleteByPrimaryKey(blog.getBlogId()) == 1;
     }
 
-    @Override
-    public List<Blog> find(String pattern) {
-//        return blogMapper.find(pattern);
-        return null;
+    public boolean isLike(User user, Blog blog) {
+        return blogMapper.isLike(user, blog);
     }
 
-
-    @Override
-    public List<Blog> getAll() {
-        return blogMapper.selectAll();
+    public boolean isCollect(User user, Blog blog) {
+        return blogMapper.isCollect(user, blog);
     }
 
-    public boolean like(User user, Blog blog, boolean isLike) {
-        if(isLike) {
+    public void like(User user, Blog blog, boolean isLike) {
+        if (isLike) {
             blogMapper.addLike(user.getUserId(), blog.getBlogId());
-        }
-        else{
+        } else {
             blogMapper.deleteLike(user.getUserId(), blog.getBlogId());
         }
-        return true;
     }
 
     public boolean collect(User user, Blog blog, boolean doCollect) {
-        if(doCollect) {
+        if (doCollect) {
             blogMapper.addCollect(user.getUserId(), blog.getBlogId());
-        }
-        else{
+        } else {
             blogMapper.deleteCollect(user.getUserId(), blog.getBlogId());
         }
         return true;
     }
 
-    public List<User> likedUser(Blog blog) {
-        return null;
-    }
-
-    public List<Blog> searchBlog(TwitterContext.BlogSearchContext searchContext) {
-        if (searchContext.getBlogTitle() == null) {
-            return blogMapper.selectAll();
-        } else {
-            //TODO search with searchContext
-            return Collections.emptyList();
+    public List<Blog> searchBlog(User user, TwitterContext.BlogSearchContext searchContext) {
+        List<Blog> blogList = blogMapper.selectAll();
+        for (Iterator<Blog> iter = blogList.iterator(); iter.hasNext(); ) {
+            Blog blog = iter.next();
+            if (searchContext.getUser() != null &&
+                    !blog.getUser().getName().contains(searchContext.getUser())) {
+                iter.remove();
+            } else if (searchContext.getBlogTitle() != null &&
+                    !blog.getTitle().contains(searchContext.getBlogTitle())) {
+                iter.remove();
+            } else if (searchContext.getBlogContent() != null &&
+                    !blog.getContent().contains(searchContext.getBlogContent())) {
+                iter.remove();
+            } else if (searchContext.getIsLike() != null &&
+                    blogMapper.isLike(user, blog) != searchContext.getIsLike()) {
+                iter.remove();
+            } else if (searchContext.getIsCollected() != null &&
+                    blogMapper.isCollect(user, blog) != searchContext.getIsCollected()) {
+                iter.remove();
+            }
         }
+        return blogList;
     }
 }

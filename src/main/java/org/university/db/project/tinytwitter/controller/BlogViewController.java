@@ -16,17 +16,25 @@ public class BlogViewController extends AbstractMenuController {
 
     @Autowired
     protected BlogViewController(BlogService blogService, CommentController commentController) {
-        super("View Blog");
+        super("View Blog", true);
         this.blogService = blogService;
         this.commentController = commentController;
     }
 
     @Override
-    protected void registerMenu() {
-        register("Like", this::like);
-        register("Unlike", this::unlike);
-        register("Collect", this::collect);
-        register("Un-collect", this::unCollect);
+    protected void registerMenu(TwitterContext context) {
+        if (blogService.isLike(context.getUser(), context.getBlog())) {
+            register("Unlike", this::unlike);
+        } else {
+            register("Like", this::like);
+        }
+
+        if (blogService.isCollect(context.getUser(), context.getBlog())) {
+            register("Un-collect", this::unCollect);
+        } else {
+            register("Collect", this::collect);
+        }
+
         register("Comments", commentController);
     }
 

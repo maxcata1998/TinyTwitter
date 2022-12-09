@@ -2,7 +2,6 @@ package org.university.db.project.tinytwitter.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.university.db.project.tinytwitter.controller.ControllerResult;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.entity.Comment;
 import org.university.db.project.tinytwitter.service.CommentService;
@@ -23,7 +22,7 @@ public class CommentController extends AbstractMenuController {
     }
 
     @Override
-    protected void registerMenu() {
+    protected void registerMenu(TwitterContext context) {
         register("Add comment", this::addComment);
         register("Update comment", this::updateComment);
         register("Search comment", this::searchComment);
@@ -37,11 +36,10 @@ public class CommentController extends AbstractMenuController {
             comments = commentService.getBlogComments(context.getBlog());
             context.getBlog().setComments(comments);
             context.setComment(comments.stream()
-                    .filter(c -> c.getAuthor().getUserId().equals(
-                            context.getUser().getUserId()))
+                    .filter(c -> c.getAuthor().equals(context.getUser()))
                     .findFirst().orElse(null));
         } else {
-            comments = commentService.searchComments(context);
+            comments = commentService.searchComments(context.getBlog(), context.getCommentSearchContext());
         }
 
         for (int i = 0; i < comments.size(); i++) {

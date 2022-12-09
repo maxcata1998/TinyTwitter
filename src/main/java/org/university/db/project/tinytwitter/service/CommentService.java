@@ -7,6 +7,7 @@ import org.university.db.project.tinytwitter.entity.Comment;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -30,17 +31,19 @@ public class CommentService implements IService<Comment> {
         return commentMapper.deleteByPrimaryKey(service.getCommentId())==1;
     }
 
-    @Override
-    public List<Comment> find(String pattern) {
-        return commentMapper.find(pattern);
-    }
-
-    @Override
-    public List<Comment> getAll() {
-        return commentMapper.selectAll();
-    }
-
-    public List<Comment> searchComments(TwitterContext context) {
+    public List<Comment> searchComments(Blog blog, TwitterContext.CommentSearchContext searchContext) {
+        List<Comment> comments = getBlogComments(blog);
+        Iterator<Comment> iter = comments.iterator();
+        while (iter.hasNext()) {
+            Comment curr = iter.next();
+            if (searchContext.getUser() != null &&
+                    !curr.getAuthor().getName().equals(searchContext.getUser())) {
+                iter.remove();
+            } else if (searchContext.getContent() != null &&
+                    !curr.getContent().contains(searchContext.getContent())) {
+                iter.remove();
+            }
+        }
         return new ArrayList<>();
     }
 

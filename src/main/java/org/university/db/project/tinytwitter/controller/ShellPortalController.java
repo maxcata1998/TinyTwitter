@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.service.TwitterContext;
-import org.university.db.project.tinytwitter.service.UserService;
 
 @Controller
 public class ShellPortalController extends AbstractMenuController {
@@ -18,7 +17,7 @@ public class ShellPortalController extends AbstractMenuController {
     }
 
     @Override
-    protected void registerMenu() {
+    protected void registerMenu(TwitterContext context) {
         register("Browse Blogs", this::browseBlogs);//blogController);
         register("My Blogs", this::browseMyBlogs);
         register("My Collections", this::browseMyCollections);//collectionController);

@@ -19,11 +19,11 @@ class TinyTwitterApplicationTests {
     @Autowired
     private BlogMapper blogMapper;
 
-    @Test
-    void contextLoads() {
-        blogMapper.insert(new Blog() {{
-            setTitle("title");
-        }});
-    }
+//    @Test
+//    void contextLoads() {
+//        blogMapper.insert(new Blog() {{
+//            setTitle("title");
+//        }});
+//    }
 
 }

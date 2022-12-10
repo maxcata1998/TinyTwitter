@@ -83,7 +83,8 @@ public class BlogController extends AbstractMenuController {
         System.out.print("title  : ");
         blog.setTitle(context.getIn().next());
         System.out.print("content: ");
-        blog.setContent(context.getIn().next());
+        context.getIn().nextLine();
+        blog.setContent(context.getIn().nextLine());
         blog.setAuthor(context.getUser().getUserId());
         blog.setCreateDate(new Date());
         blog.setUpdateDate(blog.getCreateDate());

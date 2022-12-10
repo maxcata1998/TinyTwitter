@@ -71,7 +71,7 @@ public class CommentController extends AbstractMenuController {
         comment.setUpdateDate(comment.getCreateDate());
 
         System.out.print("Enter your comment: ");
-        comment.setContent(context.getIn().nextLine());
+        comment.setContent(nextLine(context.getIn()));
         commentService.add(comment);
         context.setComment(comment);
         System.out.println("Your comment added");

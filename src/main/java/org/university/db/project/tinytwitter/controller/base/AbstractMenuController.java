@@ -54,7 +54,12 @@ public abstract class AbstractMenuController extends AbstractShellController {
                 default:
                     IShellController controller = controllerMap.get(controllerNames.get(selection - 1));
                     if (controller != this) {
-                        result = controller.run(context);
+                        try {
+                            result = controller.run(context);
+                        } catch (InputMismatchException e) {
+                            System.out.println("");
+                        }
+
                     }
                     break;
             }

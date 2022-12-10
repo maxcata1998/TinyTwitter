@@ -28,7 +28,7 @@ public class BlogViewController extends AbstractMenuController {
             register("Update Blog", this::updateBlog);
             register("Delete Blog", this::deleteBlog);
 
-            if (context.getBlog().getUser().getUserId().equals(context.getUser().getUserId())) {
+            if (!context.getBlog().getUser().getUserId().equals(context.getUser().getUserId())) {
                 if (blogService.isLike(context.getUser(), context.getBlog())) {
                     register("Unlike", this::unlike);
                 } else {

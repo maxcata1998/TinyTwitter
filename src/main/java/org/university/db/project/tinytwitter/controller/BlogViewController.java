@@ -68,7 +68,7 @@ public class BlogViewController extends AbstractMenuController {
     private ControllerResult updateBlog(TwitterContext context) {
         Blog blog = context.getBlog();
 
-        if (queryModifyString("title", context.getIn(), blog::setTitle) ||
+        if (queryModifyLine("title", context.getIn(), blog::setTitle) ||
                 queryModifyLine("content", context.getIn(), blog::setContent)) {
             blog.setUpdateDate(new Date());
             blogService.update(blog);

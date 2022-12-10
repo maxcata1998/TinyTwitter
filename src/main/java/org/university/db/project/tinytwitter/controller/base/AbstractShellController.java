@@ -37,8 +37,8 @@ public abstract class AbstractShellController implements IShellController {
         queryAndSet("Specify", param, scanner::next, scanner::next, consumer);
     }
 
-    protected boolean querySpecifyInt(String param, Scanner scanner, Consumer<Integer> consumer) {
-        return queryAndSet("Specify", param, scanner::next, scanner::nextInt, consumer);
+    protected boolean querySpecifyLine(String param, Scanner scanner, Consumer<String> consumer) {
+        return queryAndSet("Specify", param, scanner::next, () -> nextLine(scanner), consumer);
     }
 
     protected void querySpecifyBool(String param, Scanner scanner, Consumer<Boolean> consumer) {

@@ -48,7 +48,7 @@ public class CommentController extends AbstractMenuController {
 
         for (int i = 0; i < comments.size(); i++) {
             System.out.printf("%2d. | Author  : %s\n", i + 1, comments.get(i).getAuthor().getName());
-            System.out.println("    | Date    : " + comments.get(i).getDate());
+            System.out.println("    | Date    : " + comments.get(i).getUpdateDate());
             System.out.println("    | Comment : " + comments.get(i).getContent());
         }
         return ControllerResult.NORMAL;
@@ -63,9 +63,10 @@ public class CommentController extends AbstractMenuController {
         comment.setAuthor(context.getUser());
         comment.setBlogId(context.getBlog().getBlogId());
         comment.setCreateDate(new Date());
+        comment.setUpdateDate(comment.getCreateDate());
 
-        System.out.print("Enter your comment");
-        comment.setContent(context.getIn().next());
+        System.out.print("Enter your comment: ");
+        comment.setContent(context.getIn().nextLine());
         commentService.add(comment);
         System.out.println("Your comment added");
         return ControllerResult.NORMAL;
@@ -78,7 +79,7 @@ public class CommentController extends AbstractMenuController {
         }
         Comment comment = context.getComment();
         if (queryModifyString("content", context.getIn(), comment::setContent)){
-            comment.setDate(new Date());
+            comment.setUpdateDate(new Date());
             commentService.update(comment);
             System.out.println("Comment updated");
         }

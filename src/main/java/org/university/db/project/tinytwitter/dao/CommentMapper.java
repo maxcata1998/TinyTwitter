@@ -10,13 +10,13 @@ import org.university.db.project.tinytwitter.entity.User;
 @Mapper
 public interface CommentMapper {
 
-    @Insert("insert into comment (`date`, blog_id, create_date, author, content) " +
-            "values (#{date}, #{blogId}, #{createDate}, #{author.userId}, #{content})")
+    @Insert("insert into comment (update_date, blog_id, create_date, author, content) " +
+            "values (#{updateDate}, #{blogId}, #{createDate}, #{author.userId}, #{content})")
     @SelectKey(statement = "select LAST_INSERT_ID()", keyProperty = "commentId", before = false, resultType =
             Integer.class)
     int insert(Comment record);
 
-    @Update("update comment set `date` = #{date}, blog_id = #{blogId}, create_date = #{createDate}," +
+    @Update("update comment set update_date = #{updateDate}, blog_id = #{blogId}, create_date = #{createDate}," +
             "author = #{author.userId}, content = #{content} " +
             "where comment_id = #{commentId}")
     int updateByPrimaryKey(Comment record);
@@ -32,11 +32,13 @@ public interface CommentMapper {
     @Deprecated
     User fake();
 
-    @Select("select comment_id, `date`, blog_id, create_date, author, content, user_id, name from comment " +
-            "left join user on comment.author = user.user_id" +
+    @Select("select comment_id, update_date, blog_id, create_date, author, content, " +
+            "user_id user_user_id, name user_name from comment " +
+            "left join user on comment.author = user.user_id " +
             "where blog_id = #{blogId} " +
             "order by update_date desc")
     @Results(id = "commentMap", value = {
+            @Result(column = "comment_id", property = "commentId"),
             @Result(column = "blog_id", property = "blogId"),
             @Result(column = "title", property = "title"),
             @Result(column = "create_date", property = "createDate"),

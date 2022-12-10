@@ -25,10 +25,12 @@ public class BlogViewController extends AbstractMenuController {
     @Override
     protected void registerMenu(TwitterContext context) {
         if (context.getUser() != null) {
-            register("Update Blog", this::updateBlog);
-            register("Delete Blog", this::deleteBlog);
+            if (context.getBlog().getUser().equals(context.getUser())) {
+                register("Update Blog", this::updateBlog);
+                register("Delete Blog", this::deleteBlog);
+            }
 
-            if (!context.getBlog().getUser().getUserId().equals(context.getUser().getUserId())) {
+            if (!context.getBlog().getUser().equals(context.getUser())) {
                 if (blogService.isLike(context.getUser(), context.getBlog())) {
                     register("Unlike", this::unlike);
                 } else {
@@ -58,11 +60,16 @@ public class BlogViewController extends AbstractMenuController {
         return ControllerResult.NORMAL;
     }
 
+    @Override
+    protected void onReturn(TwitterContext context) {
+        context.setBlog(null);
+    }
+
     private ControllerResult updateBlog(TwitterContext context) {
         Blog blog = context.getBlog();
 
         if (queryModifyString("title", context.getIn(), blog::setTitle) ||
-                queryModifyString("content", context.getIn(), blog::setContent)) {
+                queryModifyLine("content", context.getIn(), blog::setContent)) {
             blog.setUpdateDate(new Date());
             blogService.update(blog);
             System.out.println("Blog " + blog.getTitle() + " updated");

@@ -20,8 +20,6 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
     private List<String> controllerNames;
 
-//    protected Usercon
-
     @Override
     final public ControllerResult run(TwitterContext context) {
         ControllerResult result = ControllerResult.NORMAL;
@@ -32,13 +30,15 @@ public abstract class AbstractMenuController extends AbstractShellController {
             } else {
                 controllerNames.clear();
             }
-            registerMenu(context);
+
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             result = process(context);
             if (result != ControllerResult.NORMAL) {
                 return result;
             }
+
+            registerMenu(context);
 
             int selection = menu(context);
             switch (selection) {
@@ -48,7 +48,7 @@ public abstract class AbstractMenuController extends AbstractShellController {
                 case LOGOUT:
                     return ControllerResult.LOGOUT;
                 case RETURN:
-                    return ControllerResult.RETURN;
+                    return ControllerResult.NORMAL;
                 case EXIT:
                     return ControllerResult.EXIT;
                 default:

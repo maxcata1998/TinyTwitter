@@ -46,6 +46,12 @@ public abstract class AbstractShellController implements IShellController {
         return queryAndSet("Modify", param, scanner::next, scanner::next, consumer);
     }
 
+    protected boolean queryModifyLine(String param, Scanner scanner, Consumer<String> consumer) {
+        return queryAndSet("Modify", param, scanner::next, () -> {
+            scanner.nextLine(); return scanner.nextLine();
+        }, consumer);
+    }
+
     protected boolean queryModifyInt(String param, Scanner scanner, Consumer<Integer> consumer) {
         return queryAndSet("Modify", param, scanner::next, scanner::nextInt, consumer);
     }

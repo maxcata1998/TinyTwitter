@@ -24,27 +24,27 @@ public class CommentController extends AbstractMenuController {
     @Override
     protected void registerMenu(TwitterContext context) {
         if (context.getUser() != null) {
-            register("Add comment", this::addComment);
-            register("Update comment", this::updateComment);
+            if (context.getComment() != null && context.getComment().getAuthor().equals(context.getUser())) {
+                register("Update comment", this::updateComment);
+            } else {
+                register("Add comment", this::addComment);
+            }
         }
         register("Search comment", this::searchComment);
-        if (context.getUser() != null) {
+        if (context.getUser() != null && context.getComment() != null &&
+                context.getComment().getAuthor().equals(context.getUser())) {
             register("Delete comment", this::deleteComment);
         }
     }
 
     @Override
     protected ControllerResult process(TwitterContext context) {
-        List<Comment> comments = context.getBlog().getComments();
-        if (comments == null) {
-            comments = commentService.getBlogComments(context.getBlog());
-            context.getBlog().setComments(comments);
-            context.setComment(comments.stream()
-                    .filter(c -> c.getAuthor().equals(context.getUser()))
-                    .findFirst().orElse(null));
-        } else {
-            comments = commentService.searchComments(context.getBlog(), context.getCommentSearchContext());
-        }
+        List<Comment> comments = commentService.searchComments(context.getBlog(),
+                context.getCommentSearchContext());
+
+        context.setComment(comments.stream()
+                .filter(c -> c.getAuthor().equals(context.getUser()))
+                .findFirst().orElse(null));
 
         for (int i = 0; i < comments.size(); i++) {
             System.out.printf("%2d. | Author  : %s\n", i + 1, comments.get(i).getAuthor().getName());
@@ -52,6 +52,11 @@ public class CommentController extends AbstractMenuController {
             System.out.println("    | Comment : " + comments.get(i).getContent());
         }
         return ControllerResult.NORMAL;
+    }
+
+    @Override
+    protected void onReturn(TwitterContext context) {
+        context.setComment(null);
     }
 
     private ControllerResult addComment(TwitterContext context) {
@@ -68,6 +73,7 @@ public class CommentController extends AbstractMenuController {
         System.out.print("Enter your comment: ");
         comment.setContent(context.getIn().nextLine());
         commentService.add(comment);
+        context.setComment(comment);
         System.out.println("Your comment added");
         return ControllerResult.NORMAL;
     }
@@ -78,7 +84,7 @@ public class CommentController extends AbstractMenuController {
             return ControllerResult.NORMAL;
         }
         Comment comment = context.getComment();
-        if (queryModifyString("content", context.getIn(), comment::setContent)){
+        if (queryModifyLine("content", context.getIn(), comment::setContent)) {
             comment.setUpdateDate(new Date());
             commentService.update(comment);
             System.out.println("Comment updated");

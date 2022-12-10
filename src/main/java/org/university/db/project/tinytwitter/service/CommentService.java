@@ -37,14 +37,14 @@ public class CommentService implements IService<Comment> {
         while (iter.hasNext()) {
             Comment curr = iter.next();
             if (searchContext.getUser() != null &&
-                    !curr.getAuthor().getName().equals(searchContext.getUser())) {
+                    !curr.getAuthor().getName().contains(searchContext.getUser())) {
                 iter.remove();
             } else if (searchContext.getContent() != null &&
                     !curr.getContent().contains(searchContext.getContent())) {
                 iter.remove();
             }
         }
-        return new ArrayList<>();
+        return comments;
     }
 
     public List<Comment> getBlogComments(Blog blog) {

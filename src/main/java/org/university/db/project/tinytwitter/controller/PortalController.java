@@ -1,5 +1,6 @@
 package org.university.db.project.tinytwitter.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
 import org.university.db.project.tinytwitter.entity.User;
@@ -7,21 +8,30 @@ import org.university.db.project.tinytwitter.service.TwitterContext;
 import org.university.db.project.tinytwitter.service.UserService;
 
 @Controller
-public class ShellUserController extends AbstractMenuController {
+public class PortalController extends AbstractMenuController {
+
+    private final BlogController blogController;
 
     private final UserService userService;
 
-    private final ShellPortalController portalController;
-
-    protected ShellUserController(UserService userService, ShellPortalController portalController) {
+    @Autowired
+    protected PortalController(BlogController blogController, UserService userService) {
+        super();
+        this.blogController = blogController;
         this.userService = userService;
-        this.portalController = portalController;
     }
 
     @Override
     protected void registerMenu(TwitterContext context) {
-        register("Login", this::login);
-        register("Register", this::register);
+        if (context.getUser() == null) {
+            register("Login", this::login);
+            register("Register", this::register);
+        }
+        register("Explore Blogs", this::browseBlogs);
+        if (context.getUser() != null) {
+            register("My Blogs", this::browseMyBlogs);
+            register("My Collections", this::browseMyCollections);
+        }
     }
 
     private ControllerResult login(TwitterContext context) {
@@ -33,19 +43,11 @@ public class ShellUserController extends AbstractMenuController {
         User user = userService.login(username, password);
         if (user == null) {
             System.out.println("Invalid Username or Password");
-            return ControllerResult.RETURN;
         } else {
             context.setUser(user);
         }
-        ControllerResult result = portalController.run(context);
-        if (result == ControllerResult.RETURN) {
-            return ControllerResult.NORMAL;
-        }
-        if (result == ControllerResult.LOGOUT) {
-            context.setUser(null);
-            return ControllerResult.NORMAL;
-        }
-        return result;
+
+        return ControllerResult.NORMAL;
     }
 
     private ControllerResult register(TwitterContext context) {
@@ -66,6 +68,24 @@ public class ShellUserController extends AbstractMenuController {
 
         userService.add(user);
         context.setUser(user);
-        return ControllerResult.RETURN;
+        return ControllerResult.NORMAL;
+    }
+
+    private ControllerResult browseBlogs(TwitterContext context) {
+        context.getBlogSearchContext().clear();
+        return blogController.run(context);
+    }
+
+    private ControllerResult browseMyBlogs(TwitterContext context) {
+        context.getBlogSearchContext().clear();
+        context.getBlogSearchContext().setUser(context.getUser().getName());
+        return blogController.run(context);
+    }
+
+    private ControllerResult browseMyCollections(TwitterContext context) {
+        context.getBlogSearchContext().clear();
+        context.getBlogSearchContext().setUser(context.getUser().getName());
+        context.getBlogSearchContext().setIsCollect(true);
+        return blogController.run(context);
     }
 }

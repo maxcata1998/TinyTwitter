@@ -23,10 +23,14 @@ public class CommentController extends AbstractMenuController {
 
     @Override
     protected void registerMenu(TwitterContext context) {
-        register("Add comment", this::addComment);
-        register("Update comment", this::updateComment);
+        if (context.getUser() != null) {
+            register("Add comment", this::addComment);
+            register("Update comment", this::updateComment);
+        }
         register("Search comment", this::searchComment);
-        register("Delete comment", this::deleteComment);
+        if (context.getUser() != null) {
+            register("Delete comment", this::deleteComment);
+        }
     }
 
     @Override

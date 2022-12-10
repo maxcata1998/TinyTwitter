@@ -34,7 +34,8 @@ public interface CommentMapper {
 
     @Select("select comment_id, `date`, blog_id, create_date, author, content, user_id, name from comment " +
             "left join user on comment.author = user.user_id" +
-            "where blog_id = #{blogId}")
+            "where blog_id = #{blogId} " +
+            "order by update_date desc")
     @Results(id = "commentMap", value = {
             @Result(column = "blog_id", property = "blogId"),
             @Result(column = "title", property = "title"),

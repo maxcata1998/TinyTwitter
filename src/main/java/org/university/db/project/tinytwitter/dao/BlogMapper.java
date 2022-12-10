@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.*;
 import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.entity.User;
+import org.university.db.project.tinytwitter.service.TwitterContext;
 
 @Mapper
 public interface BlogMapper {
@@ -29,18 +30,54 @@ public interface BlogMapper {
      *
      * @mbggenerated
      */
-    @Select("select blog_id, title, create_date, update_date, content," +
+    @Select("select blog_id, title, create_date, update_date, content, likes, collects" +
             "user_id user_user_id, name user_name from blog " +
-            "left join user on blog.author = user.user_id ")
+            "left join user on blog.author = user.user_id " +
+            "order by update_date desc, likes desc, collects desc, title asc")
+
     @Results(id = "blogMap", value = {
             @Result(column = "blog_id", property = "blogId"),
             @Result(column = "title", property = "title"),
             @Result(column = "create_date", property = "createDate"),
             @Result(column = "update_date", property = "updateDate"),
             @Result(column = "content", property = "content"),
+            @Result(column = "likes", property = "likes"),
+            @Result(column = "collects", property = "collects"),
             @Result(property = "user", one = @One(resultMap = "userMap", columnPrefix = "user_"))
     })
     List<Blog> selectAll();
+
+    @Select({"<script>" +
+            "    select blog_id, title, create_date, update_date, content, likes, collects," +
+            "           user_id user_user_id, name user_name from blog " +
+            "    left join user on blog.author = user.user_id " +
+            "    <where>" +
+            "        <if test='uname != null and uname != \"%%\"'>" +
+            "            and user.name like #{uname}" +
+            "        </if>" +
+            "        <if test='title != null and title != \"%%\"'>" +
+            "            and blog.title like #{title}" +
+            "        </if>" +
+            "        <if test='content != null and content != \"%%\"'>" +
+            "            and blog.content like #{content}" +
+            "        </if>" +
+            "        <if test='isLike != null'>" +
+            "            and blog.blog_id " +
+            "            <if test='isLike=false'> not </if>" +
+            "            in (select blog_id from `like` where user_id = #{userId, jdbcType=INTEGER})" +
+            "        </if>" +
+            "        <if test='isCollect != null'>" +
+            "            and blog.blog_id " +
+            "            <if test='isCollect=false'> not </if>" +
+            "            in (select blog_id from collection where user_id = #{userId, jdbcType=INTEGER})" +
+            "        </if>" +
+            "    </where> " +
+            "    order by update_date desc, likes desc, collects desc, title asc" +
+            "</script>"})
+    @ResultMap(value = {"blogMap"})
+    List<Blog> selectByFilter(String uname, String title, String content, Boolean isLike, Boolean isCollect, Integer userId);
+
+//    String s = "<script> select blog_id, title, create_date, update_date, content, likes, collects user_id user_user_id, name user_name from blog left join user on blog.author = user.user_id <where> <if test='context.user != null && context.user != \"\"'> and user.name = #{context.user} </if> <if test='context.blogTitle != null && context.blogTitle != \"\"'> and blog.title like \"%#{context.blogTitle}%\" </if> <if test='context.blogContent != null && context.blogContent != \"\"'> and blog.content like \"%#{context.blogContent}%\" </if> <if test='context.isLike != null'> and blog.blog_id  <if test='context.isLike=false'> not </if> in (select blog_id from `like` where user_id = #{user.userId}) </if> <if test='context.isCollect != null'> and blog.blog_id <if test='context.isCollect=false'> not </if> in (select blog_id from `collection` where user_id = #{user.userId}) </if> </where> order by update_date desc, likes desc, collects desc, title asc </script>";
 
     @Results(id = "userMap", value = {
             @Result(column = "user_id", property = "userId"),

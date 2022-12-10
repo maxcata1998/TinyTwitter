@@ -1,39 +1,36 @@
 package org.university.db.project.tinytwitter.controller.base;
 
 import org.university.db.project.tinytwitter.controller.ControllerResult;
+import org.university.db.project.tinytwitter.controller.PortalController;
 import org.university.db.project.tinytwitter.service.TwitterContext;
 
 import java.util.*;
 
 public abstract class AbstractMenuController extends AbstractShellController {
 
+    private static final int INVALID = 0;
+
+    private static final int LOGOUT = -1;
+
+    private static final int RETURN = -2;
+
+    private static final int EXIT = -3;
+
     private Map<String, IShellController> controllerMap;
 
     private List<String> controllerNames;
-
-    private boolean refresh;
-
-    protected AbstractMenuController() {
-        this(false);
-    }
-
-    protected AbstractMenuController(boolean refresh) {
-        this.refresh = refresh;
-    }
 
     @Override
     final public ControllerResult run(TwitterContext context) {
         ControllerResult result = ControllerResult.NORMAL;
         while (result == ControllerResult.NORMAL) {
-            if (controllerNames == null || refresh) {
-                if (controllerNames== null) {
-                    controllerNames = new ArrayList<>();
-                    controllerMap = new HashMap<>();
-                } else {
-                    controllerNames.clear();
-                }
-                registerMenu(context);
+            if (controllerNames == null) {
+                controllerNames = new ArrayList<>();
+                controllerMap = new HashMap<>();
+            } else {
+                controllerNames.clear();
             }
+            registerMenu(context);
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             result = process(context);
@@ -42,20 +39,24 @@ public abstract class AbstractMenuController extends AbstractShellController {
             }
 
             int selection = menu(context);
-            if (selection == controllerNames.size() + 1) {
-                context.setUser(null);
-                return ControllerResult.LOGOUT;
+            switch (selection) {
+                case INVALID:
+                    System.out.print("Invalid option, please select again");
+                    continue;
+                case LOGOUT:
+                    return ControllerResult.LOGOUT;
+                case RETURN:
+                    return ControllerResult.RETURN;
+                case EXIT:
+                    return ControllerResult.EXIT;
+                default:
+                    IShellController controller = controllerMap.get(controllerNames.get(selection - 1));
+                    if (controller != this) {
+                        result = controller.run(context);
+                    }
+                    break;
             }
-            if (selection == controllerNames.size() + 2) {
-                return ControllerResult.NORMAL;
-            }
-            if (selection == controllerNames.size() + 3) {
-                return ControllerResult.EXIT;
-            }
-            IShellController controller = controllerMap.get(controllerNames.get(selection - 1));
-            if (controller != this) {
-                result = controller.run(context);
-            }
+
         }
         return result;
     }
@@ -77,26 +78,40 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
 
     private int menu(TwitterContext context) {
-        System.out.println();
+//        System.out.println();
         System.out.println("Please select your option: ");
         for (int i = 1; i <= controllerNames.size(); i++) {
-            System.out.println(i + ". " + controllerNames.get(i-1));
+            System.out.println(i + ". " + controllerNames.get(i - 1));
         }
         System.out.println("----------------------------------------");
 
-        System.out.println((controllerNames.size() + 1) + ". Logout");
-        System.out.println((controllerNames.size() + 2) + ". Return");
-        System.out.println((controllerNames.size() + 3) + ". Exit");
+        if (context.getUser() != null) {
+            System.out.println("l. Logout");
+        }
+        if (!this.getClass().equals(PortalController.class)) {
+            System.out.println("r. Return");
+        }
+        System.out.println("e. Exit");
         System.out.print("Selection: ");
         int selection;
-        while (true) {
-            try {
-                selection = context.getIn().nextInt();
-                if ( 1 <= selection && selection <= controllerNames.size() + 3) {
-                    return selection;
-                }
-            } catch (InputMismatchException e) {
-                System.out.print("Invalid option, select again: ");
+        if (context.getIn().hasNextInt()) {
+            selection = context.getIn().nextInt();
+            if (1 <= selection && selection <= controllerNames.size()) {
+                return selection;
+            } else {
+                return INVALID;
+            }
+        } else {
+            char ch = context.getIn().next().toLowerCase().charAt(0);
+            switch (ch) {
+                case 'l':
+                    return LOGOUT;
+                case 'r':
+                    return RETURN;
+                case 'e':
+                    return EXIT;
+                default:
+                    return INVALID;
             }
         }
     }

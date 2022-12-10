@@ -3,9 +3,11 @@ package org.university.db.project.tinytwitter.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.university.db.project.tinytwitter.controller.base.AbstractMenuController;
+import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.service.BlogService;
 import org.university.db.project.tinytwitter.service.TwitterContext;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Controller
@@ -16,26 +18,29 @@ public class BlogViewController extends AbstractMenuController {
 
     @Autowired
     protected BlogViewController(BlogService blogService, CommentController commentController) {
-        super(true);
         this.blogService = blogService;
         this.commentController = commentController;
     }
 
     @Override
     protected void registerMenu(TwitterContext context) {
-        if (blogService.isLike(context.getUser(), context.getBlog())) {
-            register("Unlike", this::unlike);
+        if (context.getUser() != null) {
+            register("Update Blog", this::updateBlog);
+            register("Delete Blog", this::deleteBlog);
         } else {
-            register("Like", this::like);
-        }
+            if (blogService.isLike(context.getUser(), context.getBlog())) {
+                register("Unlike", this::unlike);
+            } else {
+                register("Like", this::like);
+            }
 
-        if (blogService.isCollect(context.getUser(), context.getBlog())) {
-            register("Un-collect", this::unCollect);
-        } else {
-            register("Collect", this::collect);
+            if (blogService.isCollect(context.getUser(), context.getBlog())) {
+                register("Un-collect", this::unCollect);
+            } else {
+                register("Collect", this::collect);
+            }
         }
-
-        register("Comments", commentController);
+        register("View Comments", commentController);
     }
 
     @Override
@@ -47,6 +52,30 @@ public class BlogViewController extends AbstractMenuController {
         System.out.println("\t Last update: " + context.getBlog().getUpdateDate());
         System.out.println();
         System.out.println(context.getBlog().getContent());
+
+        return ControllerResult.NORMAL;
+    }
+
+    private ControllerResult updateBlog(TwitterContext context) {
+        Blog blog = context.getBlog();
+
+        if (queryModifyString("title", context.getIn(), blog::setTitle) ||
+                queryModifyString("content", context.getIn(), blog::setContent)) {
+            blog.setUpdateDate(new Date());
+            blogService.update(blog);
+            System.out.println("Blog " + blog.getTitle() + " updated");
+        }
+        return ControllerResult.NORMAL;
+    }
+
+    private ControllerResult deleteBlog(TwitterContext context) {
+        Blog blog = context.getBlog();
+        System.out.print("Are you sure?");
+        if (readSelection(context.getIn())) {
+            blogService.delete(blog);
+            System.out.println("Blog " + blog.getTitle() + " deleted");
+            return ControllerResult.RETURN;
+        }
 
         return ControllerResult.NORMAL;
     }

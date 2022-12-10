@@ -40,11 +40,11 @@ public class TwitterContext {
 
         private Boolean isLike;
 
-        private Boolean isCollected;
+        private Boolean isCollect;
 
         public void clear() {
             user = blogTitle = blogContent = blogType = null;
-            isLike = isCollected = null;
+            isLike = isCollect = null;
         }
     }
 

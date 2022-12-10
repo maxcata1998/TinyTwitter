@@ -19,12 +19,17 @@ public abstract class AbstractShellController implements IShellController {
         return false;
     }
 
+    protected boolean readSelection(Scanner scanner) {
+        System.out.print(" [y/n]: ");
+        return scanner.next().toLowerCase().charAt(0) == 'y';
+    }
+
     protected void querySpecifyString(String param, Scanner scanner, Consumer<String> consumer) {
-        queryAndSet("Modify", param, scanner::next, scanner::next, consumer);
+        queryAndSet("Specify", param, scanner::next, scanner::next, consumer);
     }
 
     protected boolean querySpecifyInt(String param, Scanner scanner, Consumer<Integer> consumer) {
-        return queryAndSet("Modify", param, scanner::next, scanner::nextInt, consumer);
+        return queryAndSet("Specify", param, scanner::next, scanner::nextInt, consumer);
     }
 
     protected void querySpecifyBool(String param, Scanner scanner, Consumer<Boolean> consumer) {
@@ -38,10 +43,10 @@ public abstract class AbstractShellController implements IShellController {
     }
 
     protected boolean queryModifyString(String param, Scanner scanner, Consumer<String> consumer) {
-        return queryAndSet("Specify", param, scanner::next, scanner::next, consumer);
+        return queryAndSet("Modify", param, scanner::next, scanner::next, consumer);
     }
 
     protected boolean queryModifyInt(String param, Scanner scanner, Consumer<Integer> consumer) {
-        return queryAndSet("Specify", param, scanner::next, scanner::nextInt, consumer);
+        return queryAndSet("Modify", param, scanner::next, scanner::nextInt, consumer);
     }
 }

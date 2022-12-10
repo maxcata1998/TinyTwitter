@@ -12,7 +12,7 @@ public class ShellEntrypoint {
         context.scan("org.university.db.project.tinytwitter");
         context.refresh();
 
-        ShellUserController registerController = context.getBean(ShellUserController.class);
+        PortalController portalController = context.getBean(PortalController.class);
 
         System.out.println("########################################");
         System.out.println("##      Welcome to Tiny Twitter       ##");
@@ -27,7 +27,7 @@ public class ShellEntrypoint {
 
         ControllerResult result = ControllerResult.NORMAL;
         while (result != ControllerResult.EXIT) {
-            result = registerController.run(twitterContext);
+            result = portalController.run(twitterContext);
             if (result == ControllerResult.LOGOUT) {
                 System.out.println("Logging out");
                 twitterContext.setUser(null);

@@ -99,10 +99,10 @@ public class BlogController extends AbstractMenuController {
 
     private ControllerResult searchBlog(TwitterContext context) {
         TwitterContext.BlogSearchContext searchContext = context.getBlogSearchContext();
+        searchContext.clear();
         querySpecifyLine("user", context.getIn(), searchContext::setUser);
         querySpecifyLine("title", context.getIn(), searchContext::setBlogTitle);
         querySpecifyLine("content", context.getIn(), searchContext::setBlogContent);
-//        querySpecifyString("type", context.getIn(), searchContext::setBlogType);
         querySpecifyBool("like", context.getIn(), searchContext::setIsLike);
         querySpecifyBool("collection", context.getIn(), searchContext::setIsCollect);
         return ControllerResult.NORMAL;

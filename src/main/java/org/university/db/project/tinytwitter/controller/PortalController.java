@@ -84,7 +84,7 @@ public class PortalController extends AbstractMenuController {
 
     private ControllerResult browseMyCollections(TwitterContext context) {
         context.getBlogSearchContext().clear();
-        context.getBlogSearchContext().setUser(context.getUser().getName());
+//        context.getBlogSearchContext().setUser(context.getUser().getName());
         context.getBlogSearchContext().setIsCollect(true);
         return blogController.run(context);
     }

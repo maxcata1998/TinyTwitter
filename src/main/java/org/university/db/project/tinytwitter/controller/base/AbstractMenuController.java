@@ -20,6 +20,8 @@ public abstract class AbstractMenuController extends AbstractShellController {
 
     private List<String> controllerNames;
 
+//    protected Usercon
+
     @Override
     final public ControllerResult run(TwitterContext context) {
         ControllerResult result = ControllerResult.NORMAL;

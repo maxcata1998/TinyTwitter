@@ -33,8 +33,14 @@ public class BlogController extends AbstractMenuController {
 
     @Override
     protected ControllerResult process(TwitterContext context) {
+        List<Blog> blogList;
         TwitterContext.BlogSearchContext searchContext = context.getBlogSearchContext();
-        List<Blog> blogList = blogService.searchBlog(context.getUser(), searchContext);
+        if (context.getBlogList() == null) {
+            blogList = blogService.getAllBlog();
+        } else {
+            blogList = blogService.searchBlog(context.getUser(), searchContext);
+        }
+
         context.setBlogList(blogList);
 
         for (int i = 0; i < blogList.size(); i++) {
@@ -81,7 +87,7 @@ public class BlogController extends AbstractMenuController {
         Blog blog = new Blog();
 
         System.out.print("title  : ");
-        blog.setTitle(nextLine(context.getIn()));
+        blog.setTitle(validateStrLen(nextLine(context.getIn()), 45));
         System.out.print("content: ");
         blog.setContent(nextLine(context.getIn()));
 

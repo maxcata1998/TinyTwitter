@@ -53,9 +53,12 @@ public class BlogViewController extends AbstractMenuController {
         System.out.println("\t Title      : " + context.getBlog().getTitle());
         System.out.println("\t Author     : " + context.getBlog().getUser().getName());
         System.out.println("\t Created on : " + context.getBlog().getCreateDate());
-        System.out.println("\t Last update: " + context.getBlog().getUpdateDate());
+        System.out.println("\t Update  on : " + context.getBlog().getUpdateDate());
+        System.out.println("\t Likes      : " + context.getBlog().getLikes());
+        System.out.println("\t Collects   : " + context.getBlog().getCollects());
         System.out.println();
         System.out.println(context.getBlog().getContent());
+        System.out.println("----------------------------------------");
 
         return ControllerResult.NORMAL;
     }
@@ -68,8 +71,13 @@ public class BlogViewController extends AbstractMenuController {
     private ControllerResult updateBlog(TwitterContext context) {
         Blog blog = context.getBlog();
 
-        if (queryModifyLine("title", context.getIn(), blog::setTitle) ||
+        if (queryModifyLine("title", context.getIn(), (s) -> blog.setTitle(validateStrLen(s, 45))) ||
                 queryModifyLine("content", context.getIn(), blog::setContent)) {
+            String title = blog.getTitle().trim();
+            if (title.length() > 45) {
+                System.out.println("Title too long, length > 45");
+                return ControllerResult.NORMAL;
+            }
             blog.setUpdateDate(new Date());
             blogService.update(blog);
             System.out.println("Blog " + blog.getTitle() + " updated");

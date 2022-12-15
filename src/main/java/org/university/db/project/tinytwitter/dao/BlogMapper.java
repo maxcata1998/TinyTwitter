@@ -30,11 +30,7 @@ public interface BlogMapper {
      *
      * @mbggenerated
      */
-    @Select("select blog_id, title, create_date, update_date, content, likes, collects" +
-            "user_id user_user_id, name user_name from blog " +
-            "left join user on blog.author = user.user_id " +
-            "order by update_date desc, likes desc, collects desc, title asc")
-
+    @Select("call allBlogs()")
     @Results(id = "blogMap", value = {
             @Result(column = "blog_id", property = "blogId"),
             @Result(column = "title", property = "title"),

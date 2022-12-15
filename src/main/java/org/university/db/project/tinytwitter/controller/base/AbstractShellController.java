@@ -9,10 +9,18 @@ public abstract class AbstractShellController implements IShellController {
     protected AbstractShellController() {
     }
 
+    protected String validateStrLen(String in, int len) {
+        in = in.trim();
+        if (in.length() > len) {
+            throw new WrongInputException("String too long, length > " + len);
+        }
+        return in;
+    }
+
     protected <T> boolean queryAndSet(String action, String param, Supplier<String> choice, Supplier<T> supplier,
                                       Consumer<T> consumer) {
         System.out.print(action + " " + param + " ? [y/n]: ");
-        if (choice.get().toLowerCase().charAt(0) == 'y') {
+        if (choice.get().trim().toLowerCase().charAt(0) == 'y') {
             System.out.print(param + ": ");
             consumer.accept(supplier.get());
             return true;

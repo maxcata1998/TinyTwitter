@@ -31,15 +31,19 @@ public abstract class AbstractMenuController extends AbstractShellController {
                 controllerNames.clear();
             }
 
-
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            result = process(context);
+            try {
+                result = process(context);
+            } catch (WrongInputException e) {
+                System.out.println("Invalid input: " + e.getMessage());
+                continue;
+            }
+
             if (result != ControllerResult.NORMAL) {
                 return result;
             }
 
             registerMenu(context);
-
             int selection = menu(context);
             switch (selection) {
                 case INVALID:
@@ -56,8 +60,8 @@ public abstract class AbstractMenuController extends AbstractShellController {
                     if (controller != this) {
                         try {
                             result = controller.run(context);
-                        } catch (InputMismatchException e) {
-                            System.out.println("");
+                        } catch (InputMismatchException | WrongInputException e) {
+                            System.out.println("Invalid input, " + e.getMessage());
                         }
 
                     }

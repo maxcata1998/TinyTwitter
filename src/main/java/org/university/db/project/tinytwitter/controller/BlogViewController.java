@@ -7,6 +7,7 @@ import org.university.db.project.tinytwitter.entity.Blog;
 import org.university.db.project.tinytwitter.service.BlogService;
 import org.university.db.project.tinytwitter.service.TwitterContext;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -49,13 +50,14 @@ public class BlogViewController extends AbstractMenuController {
 
     @Override
     protected ControllerResult process(TwitterContext context) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         System.out.println();
-        System.out.println("\t Title      : " + context.getBlog().getTitle());
-        System.out.println("\t Author     : " + context.getBlog().getUser().getName());
-        System.out.println("\t Created on : " + context.getBlog().getCreateDate());
-        System.out.println("\t Update  on : " + context.getBlog().getUpdateDate());
-        System.out.println("\t Likes      : " + context.getBlog().getLikes());
-        System.out.println("\t Collects   : " + context.getBlog().getCollects());
+        System.out.println("  Title      : " + context.getBlog().getTitle());
+        System.out.println("  Author     : " + context.getBlog().getUser().getName());
+        System.out.println("  Created on : " + format.format(context.getBlog().getCreateDate()));
+        System.out.println("  Update  on : " + format.format(context.getBlog().getUpdateDate()));
+        System.out.println("  Likes      : " + context.getBlog().getLikes());
+        System.out.println("  Collects   : " + context.getBlog().getCollects());
         System.out.println();
         System.out.println(context.getBlog().getContent());
         System.out.println("----------------------------------------");

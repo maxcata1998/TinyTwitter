@@ -1,6 +1,6 @@
 # Tiny Twitter
 
-Bonus! Bonus! Bonus!
+
 
 ## Architecture
 

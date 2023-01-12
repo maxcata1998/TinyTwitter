@@ -10,7 +10,7 @@
 
 ## Feature
 - Auto menu set up
-  - if you haven't login, you cann't access 'my blogs', 'my collections' and 'make comment'
+  - if you haven't logined in, you can't access 'my blogs', 'my collections' and 'make comment'
   - if you have made comment, you can only 'update comment' or 'delete comment', otherwise you can only 'add comment'
 - Statistics
   - User information statistics about how many blog and comment have been written
@@ -22,7 +22,7 @@
 
 ## How to run
 
-1. Run the tiny_twitter.sql in mysql to initiate the database
+1. Run the TinyTwitter_dump.sql in mysql to initiate the database
 2. Go to folder that contains tiny-twitter-0.0.1-SHANSHOT.jar
 3. Run with the following command, change username and password to yours.
 ```shell
